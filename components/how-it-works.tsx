@@ -32,17 +32,17 @@ const STEPS = [
 
 export function HowItWorks() {
   return (
-    <section className="py-20 bg-white">
+    <section className="py-20 bg-background">
       <div className="container">
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <h2 className="text-3xl font-bold tracking-tight text-neutral-900">
+          <h2 className="text-3xl font-bold tracking-tight text-foreground">
             How{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-500 to-orange-500">
               DablieLearn
             </span>{" "}
             Works
           </h2>
-          <p className="mt-4 text-lg text-neutral-600">
+          <p className="mt-4 text-lg text-muted-foreground">
             Our platform makes learning new skills simple and effective with a proven four-step process.
           </p>
         </div>
@@ -62,7 +62,7 @@ export function HowItWorks() {
 
               <div className="space-y-2">
                 <h3 className="text-xl font-bold">{step.title}</h3>
-                <p className="text-neutral-600">{step.description}</p>
+                <p className="text-muted-foreground">{step.description}</p>
               </div>
 
               {index < STEPS.length - 1 && (
@@ -74,7 +74,7 @@ export function HowItWorks() {
                       strokeWidth="2"
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      className="text-neutral-300"
+                      className="text-muted-foreground/30"
                     />
                   </svg>
                 </div>
@@ -83,11 +83,11 @@ export function HowItWorks() {
           ))}
         </div>
 
-        <div className="mt-20 bg-gradient-to-r from-rose-50 to-orange-50 rounded-2xl p-8 md:p-12">
+        <div className="mt-20 bg-muted rounded-2xl p-8 md:p-12">
           <div className="grid md:grid-cols-2 gap-8 items-center">
             <div>
               <h3 className="text-2xl font-bold mb-4">Ready to start learning?</h3>
-              <p className="text-neutral-600 mb-6">
+              <p className="text-muted-foreground mb-6">
                 Join thousands of students who are already learning and growing with DablieLearn. Get unlimited access
                 to all courses.
               </p>
@@ -97,11 +97,11 @@ export function HowItWorks() {
                   whileTap={{ scale: 0.95 }}
                   className="rounded-xl bg-gradient-to-r from-rose-500 to-orange-500 p-[2px]"
                 >
-                  <div className="bg-white rounded-[10px] p-6">
+                  <div className="bg-background rounded-[10px] p-6">
                     <div className="font-bold text-lg mb-1">Monthly</div>
                     <div className="flex items-baseline mb-4">
                       <span className="text-3xl font-bold">$19</span>
-                      <span className="text-neutral-500 ml-1">/month</span>
+                      <span className="text-muted-foreground ml-1">/month</span>
                     </div>
                     <ul className="space-y-2 mb-6">
                       <li className="flex items-center text-sm">

@@ -5,8 +5,8 @@ import { ChevronRight, CheckCircle, DollarSign, Users, Award } from "lucide-reac
 
 export default function TeachPage() {
   return (
-    <div className="flex flex-col min-h-screen bg-white">
-      <header className="fixed top-0 w-full z-50 backdrop-blur-md bg-white/80 border-b border-neutral-200">
+    <div className="flex flex-col min-h-screen bg-background">
+      <header className="fixed top-0 w-full z-50 backdrop-blur-md bg-background/80 border-b border-border">
         <div className="container flex h-16 items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <div className="relative flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-rose-500 via-fuchsia-500 to-orange-500">
@@ -17,13 +17,13 @@ export default function TeachPage() {
           <nav className="hidden md:flex items-center gap-6">
             <Link
               href="/courses"
-              className="text-sm font-medium text-neutral-700 hover:text-neutral-900 transition-colors"
+              className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors"
             >
               Explore
             </Link>
             <Link
               href="/categories"
-              className="text-sm font-medium text-neutral-700 hover:text-neutral-900 transition-colors"
+              className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors"
             >
               Categories
             </Link>
@@ -32,7 +32,10 @@ export default function TeachPage() {
             </Link>
           </nav>
           <div className="flex items-center gap-4">
-            <Link href="/login" className="hidden sm:block text-sm font-medium text-neutral-700 hover:text-neutral-900">
+            <Link
+              href="/login"
+              className="hidden sm:block text-sm font-medium text-foreground/80 hover:text-foreground"
+            >
               Log in
             </Link>
             <Button
@@ -49,11 +52,11 @@ export default function TeachPage() {
         <section className="py-20 bg-gradient-to-r from-rose-50 to-orange-50">
           <div className="container">
             <div className="max-w-3xl mx-auto text-center">
-              <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-neutral-900 mb-6">
+              <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-foreground mb-6">
                 Share Your Knowledge and{" "}
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-500 to-orange-500">Earn</span>
               </h1>
-              <p className="text-xl text-neutral-600 mb-8">
+              <p className="text-xl text-muted-foreground mb-8">
                 Join thousands of instructors teaching millions of students on DablieLearn. Create an online course and
                 earn income by sharing your expertise.
               </p>
@@ -71,13 +74,13 @@ export default function TeachPage() {
         <section className="py-20">
           <div className="container">
             <div className="text-center mb-16">
-              <h2 className="text-3xl font-bold tracking-tight text-neutral-900">
+              <h2 className="text-3xl font-bold tracking-tight text-foreground">
                 Why Teach on{" "}
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-500 to-orange-500">
                   DablieLearn
                 </span>
               </h2>
-              <p className="mt-4 text-lg text-neutral-600 max-w-2xl mx-auto">
+              <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
                 Our platform provides everything you need to create and sell high-quality online courses.
               </p>
             </div>
@@ -89,7 +92,7 @@ export default function TeachPage() {
                     <DollarSign className="h-8 w-8 text-rose-600" />
                   </div>
                   <h3 className="text-xl font-bold mb-2">Earn Revenue</h3>
-                  <p className="text-neutral-600">
+                  <p className="text-muted-foreground">
                     Earn money every time a student purchases your course. Our revenue share model ensures you get paid
                     fairly for your expertise.
                   </p>
@@ -102,7 +105,7 @@ export default function TeachPage() {
                     <Users className="h-8 w-8 text-orange-600" />
                   </div>
                   <h3 className="text-xl font-bold mb-2">Reach Millions</h3>
-                  <p className="text-neutral-600">
+                  <p className="text-muted-foreground">
                     Get access to millions of students across the globe who are eager to learn from experts like you.
                   </p>
                 </CardContent>
@@ -114,7 +117,7 @@ export default function TeachPage() {
                     <Award className="h-8 w-8 text-fuchsia-600" />
                   </div>
                   <h3 className="text-xl font-bold mb-2">Powerful Tools</h3>
-                  <p className="text-neutral-600">
+                  <p className="text-muted-foreground">
                     Our intuitive course creation tools make it easy to build engaging courses with videos, quizzes, and
                     assignments.
                   </p>
@@ -128,7 +131,7 @@ export default function TeachPage() {
           <div className="container">
             <div className="grid md:grid-cols-2 gap-12 items-center">
               <div>
-                <h2 className="text-3xl font-bold tracking-tight text-neutral-900 mb-6">How to Get Started</h2>
+                <h2 className="text-3xl font-bold tracking-tight text-foreground mb-6">How to Get Started</h2>
                 <div className="space-y-6">
                   <div className="flex gap-4">
                     <div className="h-10 w-10 rounded-full bg-gradient-to-r from-rose-500 to-orange-500 flex items-center justify-center text-white font-bold shrink-0">
@@ -136,7 +139,7 @@ export default function TeachPage() {
                     </div>
                     <div>
                       <h3 className="font-bold text-xl mb-2">Plan Your Course</h3>
-                      <p className="text-neutral-600">
+                      <p className="text-muted-foreground">
                         Decide what you'll teach and how you'll structure your course to provide the most value to
                         students.
                       </p>
@@ -149,7 +152,7 @@ export default function TeachPage() {
                     </div>
                     <div>
                       <h3 className="font-bold text-xl mb-2">Create Your Content</h3>
-                      <p className="text-neutral-600">
+                      <p className="text-muted-foreground">
                         Record high-quality videos, create engaging assignments, and develop comprehensive resources.
                       </p>
                     </div>
@@ -161,7 +164,7 @@ export default function TeachPage() {
                     </div>
                     <div>
                       <h3 className="font-bold text-xl mb-2">Launch and Promote</h3>
-                      <p className="text-neutral-600">
+                      <p className="text-muted-foreground">
                         Publish your course and use our marketing tools to reach students interested in your topic.
                       </p>
                     </div>
@@ -203,7 +206,7 @@ export default function TeachPage() {
         </section>
       </main>
 
-      <footer className="bg-neutral-900 text-neutral-300 pt-16 pb-8">
+      <footer className="bg-neutral-900 text-neutral-300 pt-16 pb-8 dark:bg-black dark:text-neutral-300">
         <div className="container">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-12">
             <div className="lg:col-span-2">

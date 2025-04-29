@@ -101,17 +101,17 @@ export function FeaturedCourses() {
     activeCategory === "All" ? COURSES : COURSES.filter((course) => course.category === activeCategory)
 
   return (
-    <section className="py-20 bg-white">
+    <section className="py-20 bg-background">
       <div className="container">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-12 gap-6">
           <div>
-            <h2 className="text-3xl font-bold tracking-tight text-neutral-900">
+            <h2 className="text-3xl font-bold tracking-tight text-foreground">
               Featured{" "}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-500 to-orange-500">
                 Courses
               </span>
             </h2>
-            <p className="mt-2 text-neutral-600 max-w-2xl">
+            <p className="mt-2 text-muted-foreground max-w-2xl">
               Discover our most popular courses across various categories, designed to help you achieve your goals.
             </p>
           </div>
@@ -124,7 +124,7 @@ export function FeaturedCourses() {
                 className={`rounded-full ${
                   activeCategory === category
                     ? "bg-gradient-to-r from-rose-500 to-orange-500 hover:from-rose-600 hover:to-orange-600"
-                    : "hover:text-neutral-900 hover:bg-neutral-100"
+                    : "hover:text-foreground hover:bg-secondary"
                 }`}
                 onClick={() => setActiveCategory(category)}
               >
@@ -156,13 +156,15 @@ export function FeaturedCourses() {
                   )}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
                     <div className="p-4 w-full">
-                      <Button className="w-full bg-white text-neutral-900 hover:bg-white/90">Preview Course</Button>
+                      <Button className="w-full bg-white text-neutral-900 hover:bg-white/90 dark:bg-neutral-900 dark:text-white dark:hover:bg-neutral-800">
+                        Preview Course
+                      </Button>
                     </div>
                   </div>
                 </div>
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between mb-2">
-                    <Badge variant="outline" className="bg-neutral-100 hover:bg-neutral-200 text-neutral-800">
+                    <Badge variant="outline" className="bg-secondary hover:bg-secondary/80 text-foreground">
                       {course.category}
                     </Badge>
                     <div className="flex items-center">
@@ -171,8 +173,8 @@ export function FeaturedCourses() {
                     </div>
                   </div>
                   <h3 className="font-bold text-xl mb-2 line-clamp-2">{course.title}</h3>
-                  <p className="text-neutral-500 text-sm mb-4">By {course.instructor}</p>
-                  <div className="flex items-center gap-4 text-sm text-neutral-600">
+                  <p className="text-muted-foreground text-sm mb-4">By {course.instructor}</p>
+                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
                     <div className="flex items-center">
                       <Users className="h-4 w-4 mr-1" />
                       {course.students.toLocaleString()}
@@ -187,7 +189,7 @@ export function FeaturedCourses() {
                 <CardFooter className="p-6 pt-0 flex items-center justify-between">
                   <div className="font-bold text-xl">${course.price}</div>
                   <div className="flex gap-2">
-                    <Button variant="ghost" size="icon" className="rounded-full hover:bg-neutral-100">
+                    <Button variant="ghost" size="icon" className="rounded-full hover:bg-secondary">
                       <Share2 className="h-5 w-5" />
                     </Button>
                     <Button

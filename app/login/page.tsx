@@ -37,7 +37,7 @@ export default function LoginPage() {
                 <span className="w-full border-t" />
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-white px-2 text-neutral-500">Or continue with</span>
+                <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
               </div>
             </div>
 
@@ -90,6 +90,24 @@ export default function LoginPage() {
               >
                 Sign In
               </Button>
+
+              <div className="relative my-6">
+                <div className="absolute inset-0 flex items-center">
+                  <span className="w-full border-t" />
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                  <span className="bg-background px-2 text-muted-foreground">Or try demo accounts</span>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <Button variant="outline" className="w-full" asChild>
+                  <Link href="/dashboard">Demo Student</Link>
+                </Button>
+                <Button variant="outline" className="w-full" asChild>
+                  <Link href="/instructor/dashboard">Demo Instructor</Link>
+                </Button>
+              </div>
             </form>
 
             <div className="text-center text-sm">

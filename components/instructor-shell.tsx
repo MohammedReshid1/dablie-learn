@@ -13,6 +13,7 @@ import {
   Settings,
   User,
   Users,
+  Home,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -72,6 +73,14 @@ export function InstructorShell({ children }: InstructorShellProps) {
       <div className="flex-1 container grid grid-cols-12 gap-6 py-8">
         <aside className="hidden md:block col-span-3 lg:col-span-2">
           <nav className="grid gap-2 sticky top-24">
+            <div className="flex items-center gap-2 mb-8">
+              <Button variant="outline" size="sm" asChild>
+                <Link href="/">
+                  <Home className="h-4 w-4 mr-2" />
+                  Back to Home
+                </Link>
+              </Button>
+            </div>
             <Link
               href="/instructor/dashboard"
               className="flex items-center gap-2 rounded-lg px-3 py-2 text-neutral-900 transition-all hover:text-rose-600 bg-neutral-100"

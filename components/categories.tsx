@@ -75,17 +75,17 @@ export function Categories() {
   }
 
   return (
-    <section className="py-20 bg-neutral-50">
+    <section className="py-20 bg-muted">
       <div className="container">
         <div className="flex items-end justify-between mb-12">
           <div>
-            <h2 className="text-3xl font-bold tracking-tight text-neutral-900">
+            <h2 className="text-3xl font-bold tracking-tight text-foreground">
               Browse by{" "}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-500 to-orange-500">
                 Category
               </span>
             </h2>
-            <p className="mt-2 text-neutral-600 max-w-2xl">
+            <p className="mt-2 text-muted-foreground max-w-2xl">
               Explore our diverse range of categories to find the perfect courses for your learning journey.
             </p>
           </div>
@@ -126,18 +126,18 @@ export function Categories() {
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
                         <h3 className="font-bold text-xl">{category.name}</h3>
-                        <span className="text-sm font-medium text-neutral-500">{category.courses} courses</span>
+                        <span className="text-sm font-medium text-muted-foreground">{category.courses} courses</span>
                       </div>
 
-                      <p className="text-neutral-600 line-clamp-2">{category.description}</p>
+                      <p className="text-muted-foreground line-clamp-2">{category.description}</p>
 
                       <div className="pt-4">
-                        <h4 className="text-sm font-medium text-neutral-700 mb-2">Popular Topics:</h4>
+                        <h4 className="text-sm font-medium text-foreground mb-2">Popular Topics:</h4>
                         <div className="flex flex-wrap gap-2">
                           {category.popular.map((topic) => (
                             <span
                               key={topic}
-                              className="inline-flex items-center rounded-full bg-neutral-100 px-3 py-1 text-xs font-medium text-neutral-800 group-hover:bg-neutral-200 transition-colors"
+                              className="inline-flex items-center rounded-full bg-secondary px-3 py-1 text-xs font-medium text-foreground group-hover:bg-secondary/80 transition-colors"
                             >
                               {topic}
                             </span>
