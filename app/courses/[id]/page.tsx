@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { CheckCircle2, Clock, Download, Globe, PlayCircle, Share2, ShieldCheck, Star, Users } from "lucide-react"
 import Link from "next/link"
 import { use } from "react"
+import { MainHeader } from "@/components/layout/main-header"
 
 export default function CourseDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = use(params)
@@ -122,47 +123,7 @@ export default function CourseDetailPage({ params }: { params: Promise<{ id: str
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
-      <header className="fixed top-0 w-full z-50 backdrop-blur-md bg-background/80 border-b border-border">
-        <div className="container flex h-16 items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="relative flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-rose-500 via-fuchsia-500 to-orange-500">
-              <span className="font-bold text-primary-foreground text-xl">D</span>
-            </div>
-            <span className="font-bold text-xl text-foreground">DablieLearn</span>
-          </Link>
-          <nav className="hidden md:flex items-center gap-6">
-            <Link href="/courses" className="text-sm font-medium text-primary">
-              Explore
-            </Link>
-            <Link
-              href="/categories"
-              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Categories
-            </Link>
-            <Link
-              href="/about"
-              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-            >
-              About Us
-            </Link>
-            <Link
-              href="/teach"
-              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Teach
-            </Link>
-          </nav>
-          <div className="flex items-center gap-4">
-            <Link href="/login" className="hidden sm:block text-sm font-medium text-muted-foreground hover:text-foreground">
-              Log in
-            </Link>
-            <Button asChild className="rounded-full">
-              <Link href="/signup">Get Started</Link>
-            </Button>
-          </div>
-        </div>
-      </header>
+      <MainHeader activeLink="Explore" />
 
       <main className="flex-1 pt-16">
         <section className="py-12 bg-gradient-to-b from-muted/30 to-background">
@@ -380,51 +341,49 @@ export default function CourseDetailPage({ params }: { params: Promise<{ id: str
               </TabsContent>
 
               <TabsContent value="instructor" className="mt-6" id="instructor">
-                <div className="max-w-4xl mx-auto">
-                  <div className="flex flex-col md:flex-row gap-8">
-                    <div className="md:w-1/3">
-                      <div className="aspect-square rounded-xl overflow-hidden">
-                        <img
-                          src={course.instructor.image || "/placeholder.svg"}
-                          alt={course.instructor.name}
-                          className="h-full w-full object-cover"
-                        />
+                <div className="flex flex-col md:flex-row gap-8">
+                  <div className="md:w-1/3">
+                    <div className="aspect-square rounded-xl overflow-hidden">
+                      <img
+                        src={course.instructor.image || "/placeholder.svg"}
+                        alt={course.instructor.name}
+                        className="h-full w-full object-cover"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="md:w-2/3">
+                    <h2 className="text-2xl font-bold mb-2 text-foreground">{course.instructor.name}</h2>
+                    <p className="text-muted-foreground mb-4">{course.instructor.title}</p>
+
+                    <div className="flex flex-wrap gap-6 mb-6">
+                      <div className="flex items-center">
+                        <Star className="h-5 w-5 text-amber-400 mr-2" />
+                        <div>
+                          <div className="font-medium text-foreground">{course.instructor.reviews} Instructor Rating</div>
+                          <div className="text-sm text-muted-foreground">Reviews</div>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center">
+                        <Users className="h-5 w-5 text-muted-foreground mr-2" />
+                        <div>
+                          <div className="font-medium text-foreground">{(course.instructor.students / 1000).toFixed(1)}k</div>
+                          <div className="text-sm text-muted-foreground">Students</div>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center">
+                        <PlayCircle className="h-5 w-5 text-muted-foreground mr-2" />
+                        <div>
+                          <div className="font-medium text-foreground">{course.instructor.courses}</div>
+                          <div className="text-sm text-muted-foreground">Courses</div>
+                        </div>
                       </div>
                     </div>
 
-                    <div className="md:w-2/3">
-                      <h2 className="text-2xl font-bold mb-2 text-foreground">{course.instructor.name}</h2>
-                      <p className="text-muted-foreground mb-4">{course.instructor.title}</p>
-
-                      <div className="flex flex-wrap gap-6 mb-6">
-                        <div className="flex items-center">
-                          <Star className="h-5 w-5 text-amber-400 mr-2" />
-                          <div>
-                            <div className="font-medium text-foreground">{course.instructor.reviews} Instructor Rating</div>
-                            <div className="text-sm text-muted-foreground">Reviews</div>
-                          </div>
-                        </div>
-
-                        <div className="flex items-center">
-                          <Users className="h-5 w-5 text-muted-foreground mr-2" />
-                          <div>
-                            <div className="font-medium text-foreground">{(course.instructor.students / 1000).toFixed(1)}k</div>
-                            <div className="text-sm text-muted-foreground">Students</div>
-                          </div>
-                        </div>
-
-                        <div className="flex items-center">
-                          <PlayCircle className="h-5 w-5 text-muted-foreground mr-2" />
-                          <div>
-                            <div className="font-medium text-foreground">{course.instructor.courses}</div>
-                            <div className="text-sm text-muted-foreground">Courses</div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="prose max-w-none dark:prose-invert">
-                        <p>{course.instructor.bio}</p>
-                      </div>
+                    <div className="prose max-w-none dark:prose-invert">
+                      <p>{course.instructor.bio}</p>
                     </div>
                   </div>
                 </div>

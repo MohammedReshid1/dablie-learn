@@ -5,6 +5,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Search, Star, Users, Clock } from "lucide-react"
 import { use } from "react"
 import { Badge } from "@/components/ui/badge"
+import { MainHeader } from "@/components/layout/main-header"
 
 export default function CategoryPage({ params }: { params: Promise<{ slug: string }> }) {
   // Unwrap params using React.use()
@@ -45,47 +46,7 @@ export default function CategoryPage({ params }: { params: Promise<{ slug: strin
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
-      <header className="fixed top-0 w-full z-50 backdrop-blur-md bg-background/80 border-b border-border">
-        <div className="container flex h-16 items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="relative flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-rose-500 via-fuchsia-500 to-orange-500">
-              <span className="font-bold text-primary-foreground text-xl">D</span>
-            </div>
-            <span className="font-bold text-xl text-foreground">DablieLearn</span>
-          </Link>
-          <nav className="hidden md:flex items-center gap-6">
-            <Link
-              href="/courses"
-              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Explore
-            </Link>
-            <Link href="/categories" className="text-sm font-medium text-primary">
-              Categories
-            </Link>
-            <Link
-              href="/about"
-              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-            >
-              About Us
-            </Link>
-            <Link
-              href="/teach"
-              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Teach
-            </Link>
-          </nav>
-          <div className="flex items-center gap-4">
-            <Link href="/login" className="hidden sm:block text-sm font-medium text-muted-foreground hover:text-foreground">
-              Log in
-            </Link>
-            <Button asChild className="rounded-full">
-              <Link href="/signup">Get Started</Link>
-            </Button>
-          </div>
-        </div>
-      </header>
+      <MainHeader activeLink="Categories" />
 
       <main className="flex-1 pt-16">
         <section className="py-12 bg-gradient-to-r from-primary/10 via-background to-background">
