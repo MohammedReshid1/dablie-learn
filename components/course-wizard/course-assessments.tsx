@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -21,17 +21,59 @@ import { Plus, FileQuestion, FileText, Trash2, Edit, CheckSquare, SquareIcon } f
 import { Checkbox } from "@/components/ui/checkbox"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 
-export default function CourseAssessments({ data, updateData }) {
+// Define interfaces for props and state
+interface Option {
+  text: string
+  isCorrect: boolean
+}
+
+interface Question {
+  text: string
+  type: "multiple-choice" | "single-choice" | "true-false" | "short-answer"
+  options: Option[]
+  // Removed correctAnswerIndex as it's handled by Option.isCorrect for choice types
+}
+
+interface Quiz {
+  id: string
+  title: string
+  description: string
+  passingScore: number
+  timeLimit: number // in minutes, 0 for no limit
+  questions: Question[]
+}
+
+interface Assignment {
+  id: string
+  title: string
+  description: string
+  instructions: string
+  deadline: number // days from enrollment
+  passingGrade: number // percentage
+  submissionType: "text" | "file" | "url"
+  maxAttempts: number
+}
+
+interface CourseAssessmentsProps {
+  formData: {
+    quizzes?: Quiz[]
+    assignments?: Assignment[]
+  }
+  updateFormData: (data: { quizzes?: Quiz[]; assignments?: Assignment[] }) => void
+}
+
+export default function CourseAssessments({ formData, updateFormData }: CourseAssessmentsProps) {
   const [activeTab, setActiveTab] = useState("quizzes")
-  const [quizzes, setQuizzes] = useState(data.quizzes || [])
-  const [assignments, setAssignments] = useState(data.assignments || [])
+  // Initialize state with types and from formData
+  const [quizzes, setQuizzes] = useState<Quiz[]>(formData.quizzes || [])
+  const [assignments, setAssignments] = useState<Assignment[]>(formData.assignments || [])
   const [showAddQuizDialog, setShowAddQuizDialog] = useState(false)
   const [showAddAssignmentDialog, setShowAddAssignmentDialog] = useState(false)
-  const [currentQuizIndex, setCurrentQuizIndex] = useState(null)
-  const [currentAssignmentIndex, setCurrentAssignmentIndex] = useState(null)
+  const [currentQuizIndex, setCurrentQuizIndex] = useState<number | null>(null)
+  const [currentAssignmentIndex, setCurrentAssignmentIndex] = useState<number | null>(null)
 
-  // New quiz state
-  const [newQuiz, setNewQuiz] = useState({
+  // New quiz state with type
+  const [newQuiz, setNewQuiz] = useState<Omit<Quiz, "id">>({
     title: "",
     description: "",
     passingScore: 70,
@@ -39,19 +81,18 @@ export default function CourseAssessments({ data, updateData }) {
     questions: [],
   })
 
-  // New question state
-  const [newQuestion, setNewQuestion] = useState({
+  // New question state with type
+  const [newQuestion, setNewQuestion] = useState<Question>({
     text: "",
     type: "multiple-choice",
     options: [
       { text: "", isCorrect: false },
       { text: "", isCorrect: false },
     ],
-    correctAnswerIndex: null,
   })
 
-  // New assignment state
-  const [newAssignment, setNewAssignment] = useState({
+  // New assignment state with type
+  const [newAssignment, setNewAssignment] = useState<Omit<Assignment, "id">>({
     title: "",
     description: "",
     instructions: "",
@@ -60,6 +101,11 @@ export default function CourseAssessments({ data, updateData }) {
     submissionType: "text",
     maxAttempts: 3,
   })
+
+  // useEffect to update parent state
+  useEffect(() => {
+    updateFormData({ quizzes, assignments })
+  }, [quizzes, assignments, updateFormData])
 
   // Handle quizzes
   const addQuiz = () => {
@@ -80,10 +126,9 @@ export default function CourseAssessments({ data, updateData }) {
       questions: [],
     })
     setShowAddQuizDialog(false)
-    updateData({ quizzes: updatedQuizzes })
   }
 
-  const editQuiz = (index) => {
+  const editQuiz = (index: number) => {
     setNewQuiz({ ...quizzes[index] })
     setCurrentQuizIndex(index)
     setShowAddQuizDialog(true)
@@ -108,13 +153,11 @@ export default function CourseAssessments({ data, updateData }) {
     })
     setCurrentQuizIndex(null)
     setShowAddQuizDialog(false)
-    updateData({ quizzes: updatedQuizzes })
   }
 
-  const deleteQuiz = (index) => {
+  const deleteQuiz = (index: number) => {
     const updatedQuizzes = quizzes.filter((_, i) => i !== index)
     setQuizzes(updatedQuizzes)
-    updateData({ quizzes: updatedQuizzes })
   }
 
   // Handle questions in a quiz
@@ -147,27 +190,25 @@ export default function CourseAssessments({ data, updateData }) {
         { text: "", isCorrect: false },
         { text: "", isCorrect: false },
       ],
-      correctAnswerIndex: null,
     })
   }
 
-  const removeQuestion = (index) => {
+  const removeQuestion = (index: number) => {
     const updatedQuestions = newQuiz.questions.filter((_, i) => i !== index)
     setNewQuiz({ ...newQuiz, questions: updatedQuestions })
   }
 
-  const updateQuestionType = (type) => {
+  const updateQuestionType = (type: Question["type"]) => {
     setNewQuestion({
       ...newQuestion,
       type,
       options:
-        type === "multiple-choice"
+        type === "multiple-choice" || type === "single-choice"
           ? [
               { text: "", isCorrect: false },
               { text: "", isCorrect: false },
             ]
-          : [],
-      correctAnswerIndex: null,
+          : [], // Clear options for non-choice types
     })
   }
 
@@ -178,13 +219,13 @@ export default function CourseAssessments({ data, updateData }) {
     })
   }
 
-  const updateOption = (index, text) => {
+  const updateOption = (index: number, text: string) => {
     const updatedOptions = [...newQuestion.options]
     updatedOptions[index] = { ...updatedOptions[index], text }
     setNewQuestion({ ...newQuestion, options: updatedOptions })
   }
 
-  const toggleOptionCorrect = (index) => {
+  const toggleOptionCorrect = (index: number) => {
     const updatedOptions = [...newQuestion.options]
 
     if (newQuestion.type === "multiple-choice") {
@@ -224,10 +265,9 @@ export default function CourseAssessments({ data, updateData }) {
       maxAttempts: 3,
     })
     setShowAddAssignmentDialog(false)
-    updateData({ assignments: updatedAssignments })
   }
 
-  const editAssignment = (index) => {
+  const editAssignment = (index: number) => {
     setNewAssignment({ ...assignments[index] })
     setCurrentAssignmentIndex(index)
     setShowAddAssignmentDialog(true)
@@ -254,627 +294,374 @@ export default function CourseAssessments({ data, updateData }) {
     })
     setCurrentAssignmentIndex(null)
     setShowAddAssignmentDialog(false)
-    updateData({ assignments: updatedAssignments })
   }
 
-  const deleteAssignment = (index) => {
+  const deleteAssignment = (index: number) => {
     const updatedAssignments = assignments.filter((_, i) => i !== index)
     setAssignments(updatedAssignments)
-    updateData({ assignments: updatedAssignments })
   }
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h2 className="text-xl font-bold mb-1">Course Assessments</h2>
-        <p className="text-muted-foreground">Create quizzes and assignments to assess student understanding.</p>
-      </div>
+    <Card className="w-full bg-card">
+      <CardHeader>
+        <CardTitle className="text-foreground">Assessments</CardTitle>
+        <CardDescription className="text-muted-foreground">
+          Add quizzes and assignments to evaluate student learning.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="quizzes">Quizzes</TabsTrigger>
+            <TabsTrigger value="assignments">Assignments</TabsTrigger>
+          </TabsList>
 
-      <Tabs defaultValue="quizzes" value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="quizzes" className="flex items-center gap-2">
-            <FileQuestion className="h-4 w-4" />
-            <span>Quizzes</span>
-          </TabsTrigger>
-          <TabsTrigger value="assignments" className="flex items-center gap-2">
-            <FileText className="h-4 w-4" />
-            <span>Assignments</span>
-          </TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="quizzes" className="p-4 pt-6">
-          <div className="flex justify-between items-center mb-6">
-            <div>
-              <h3 className="text-lg font-semibold">Course Quizzes</h3>
-              <p className="text-sm text-muted-foreground">
-                Create quizzes to test student knowledge and provide feedback.
-              </p>
-            </div>
-
-            <Dialog open={showAddQuizDialog} onOpenChange={setShowAddQuizDialog}>
-              <DialogTrigger asChild>
-                <Button className="bg-gradient-to-r from-rose-500 to-orange-500 hover:from-rose-600 hover:to-orange-600">
-                  <Plus className="h-4 w-4 mr-2" />
-                  Create Quiz
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
-                <DialogHeader>
-                  <DialogTitle>{currentQuizIndex !== null ? "Edit Quiz" : "Create New Quiz"}</DialogTitle>
-                  <DialogDescription>Design your quiz with multiple types of questions.</DialogDescription>
-                </DialogHeader>
-
-                <div className="space-y-6 py-4">
-                  <div className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="quizTitle">Quiz Title</Label>
+          {/* Quizzes Tab */}
+          <TabsContent value="quizzes">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-semibold text-foreground">Quizzes</h3>
+              {/* Add Quiz Dialog Trigger */}
+              <Dialog open={showAddQuizDialog} onOpenChange={setShowAddQuizDialog}>
+                <DialogTrigger asChild>
+                  <Button variant="outline" size="sm" onClick={() => { setCurrentQuizIndex(null); setNewQuiz({ title: "", description: "", passingScore: 70, timeLimit: 0, questions: [] }); setShowAddQuizDialog(true); }}>
+                    <Plus className="mr-2 h-4 w-4" /> Add Quiz
+                  </Button>
+                </DialogTrigger>
+                {/* Add/Edit Quiz Dialog Content */}
+                <DialogContent className="sm:max-w-[600px] bg-card border-border">
+                  <DialogHeader>
+                    <DialogTitle className="text-foreground">{currentQuizIndex !== null ? "Edit Quiz" : "Add New Quiz"}</DialogTitle>
+                    <DialogDescription className="text-muted-foreground">
+                      Configure the details and questions for this quiz.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="grid gap-4 py-4 max-h-[70vh] overflow-y-auto pr-6">
+                    {/* Quiz Details */}
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <Label htmlFor="quiz-title" className="text-right text-foreground">Title</Label>
                       <Input
-                        id="quizTitle"
-                        placeholder="e.g. JavaScript Fundamentals Quiz"
+                        id="quiz-title"
                         value={newQuiz.title}
                         onChange={(e) => setNewQuiz({ ...newQuiz, title: e.target.value })}
+                        className="col-span-3 bg-input text-foreground border-border placeholder:text-muted-foreground"
+                        placeholder="e.g., Introduction Quiz"
                       />
                     </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="quizDescription">Description (Optional)</Label>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <Label htmlFor="quiz-description" className="text-right text-foreground">Description</Label>
                       <Textarea
-                        id="quizDescription"
-                        placeholder="Briefly describe what this quiz will cover..."
+                        id="quiz-description"
                         value={newQuiz.description}
                         onChange={(e) => setNewQuiz({ ...newQuiz, description: e.target.value })}
+                        className="col-span-3 bg-input text-foreground border-border placeholder:text-muted-foreground"
+                        placeholder="Briefly describe the quiz content"
                       />
                     </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="passingScore">Passing Score (%)</Label>
+                     <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="quiz-passing-score" className="text-right text-foreground">Passing Score (%)</Label>
                         <Input
-                          id="passingScore"
+                          id="quiz-passing-score"
                           type="number"
                           min="0"
                           max="100"
                           value={newQuiz.passingScore}
-                          onChange={(e) =>
-                            setNewQuiz({ ...newQuiz, passingScore: Number.parseInt(e.target.value) || 0 })
-                          }
+                          onChange={(e) => setNewQuiz({ ...newQuiz, passingScore: parseInt(e.target.value) || 0 })}
+                          className="col-span-3 bg-input text-foreground border-border placeholder:text-muted-foreground"
                         />
                       </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="timeLimit">Time Limit (minutes, 0 for no limit)</Label>
+                      <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="quiz-time-limit" className="text-right text-foreground">Time Limit (minutes)</Label>
                         <Input
-                          id="timeLimit"
+                          id="quiz-time-limit"
                           type="number"
                           min="0"
                           value={newQuiz.timeLimit}
-                          onChange={(e) => setNewQuiz({ ...newQuiz, timeLimit: Number.parseInt(e.target.value) || 0 })}
+                          onChange={(e) => setNewQuiz({ ...newQuiz, timeLimit: parseInt(e.target.value) || 0 })}
+                          className="col-span-3 bg-input text-foreground border-border placeholder:text-muted-foreground"
+                          placeholder="0 for no limit"
                         />
                       </div>
-                    </div>
-                  </div>
 
-                  <div className="border-t pt-4">
-                    <h4 className="font-medium mb-4">Quiz Questions</h4>
+                    {/* Questions Section */}
+                    <div className="col-span-4 mt-4 border-t border-border pt-4">
+                      <h4 className="font-semibold mb-2 text-foreground">Questions</h4>
+                      {newQuiz.questions.map((q, index) => (
+                        <div key={index} className="border border-border rounded-md p-3 mb-3 bg-background">
+                           <div className="flex justify-between items-start">
+                            <p className="text-sm font-medium text-foreground mb-1">{index + 1}. {q.text}</p>
+                            <Button variant="ghost" size="icon" onClick={() => removeQuestion(index)} className="text-muted-foreground hover:text-destructive">
+                               <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
+                          <p className="text-xs text-muted-foreground capitalize mb-2">{q.type.replace('-', ' ')}</p>
+                          {q.options && q.options.length > 0 && (
+                            <ul className="list-disc list-inside pl-4 text-sm space-y-1 text-muted-foreground">
+                              {q.options.map((opt, optIndex) => (
+                                <li key={optIndex} className={`${opt.isCorrect ? 'text-green-600 font-medium' : ''}`}>
+                                  {opt.text} {opt.isCorrect && "(Correct)"}
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+                           {q.type === 'short-answer' && <p className="text-sm text-muted-foreground italic">(Requires manual grading)</p>}
+                           {q.type === 'true-false' && (
+                              <p className="text-sm text-muted-foreground">Correct Answer: {q.options[0]?.isCorrect ? 'True' : 'False'}</p>
+                           )}
+                        </div>
+                      ))}
 
-                    {newQuiz.questions.length > 0 ? (
-                      <div className="space-y-3 mb-6">
-                        {newQuiz.questions.map((question, index) => (
-                          <Card key={index}>
-                            <CardHeader className="py-3">
-                              <div className="flex justify-between items-center">
-                                <CardTitle className="text-sm font-medium">Question {index + 1}</CardTitle>
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  className="h-8 text-red-500 hover:text-red-700 hover:bg-red-50"
-                                  onClick={() => removeQuestion(index)}
-                                >
-                                  <Trash2 className="h-4 w-4" />
-                                </Button>
-                              </div>
-                            </CardHeader>
-                            <CardContent className="text-sm">
-                              <p className="font-medium">{question.text}</p>
-                              <p className="text-xs text-muted-foreground mt-1">
-                                Type:{" "}
-                                {question.type === "multiple-choice"
-                                  ? "Multiple Choice"
-                                  : question.type === "single-choice"
-                                    ? "Single Choice"
-                                    : "True/False"}
-                              </p>
+                      {/* Add New Question Form */}
+                      <div className="border border-dashed border-border rounded-lg p-4 mt-4 bg-background">
+                        <h5 className="font-semibold mb-3 text-foreground">Add New Question</h5>
+                        <div className="grid gap-3">
+                          <Label htmlFor="question-type" className="text-foreground">Question Type</Label>
+                          <Select value={newQuestion.type} onValueChange={(value: Question["type"]) => updateQuestionType(value)}>
+                             <SelectTrigger className="w-full bg-input text-foreground border-border">
+                                <SelectValue placeholder="Select question type" />
+                             </SelectTrigger>
+                             <SelectContent className="bg-popover text-popover-foreground border-border">
+                                <SelectItem value="multiple-choice">Multiple Choice</SelectItem>
+                                <SelectItem value="single-choice">Single Choice (Radio)</SelectItem>
+                                <SelectItem value="true-false">True/False</SelectItem>
+                                {/* <SelectItem value="short-answer">Short Answer</SelectItem> */} {/* Short Answer might need more complex handling */}
+                             </SelectContent>
+                          </Select>
 
-                              {(question.type === "multiple-choice" || question.type === "single-choice") && (
-                                <div className="mt-2 space-y-1">
-                                  {question.options.map((option, optIndex) => (
-                                    <div key={optIndex} className="flex items-center gap-2">
-                                      <div className="w-4 h-4 flex items-center justify-center">
-                                        {option.isCorrect ? (
-                                          <CheckSquare className="h-4 w-4 text-green-500" />
-                                        ) : (
-                                          <SquareIcon className="h-4 w-4 text-gray-300" />
-                                        )}
-                                      </div>
-                                      <span>{option.text}</span>
-                                    </div>
-                                  ))}
-                                </div>
-                              )}
-
-                              {question.type === "true-false" && (
-                                <div className="mt-2 text-sm">
-                                  Correct answer:{" "}
-                                  <span className="font-medium">{question.correctAnswer ? "True" : "False"}</span>
-                                </div>
-                              )}
-                            </CardContent>
-                          </Card>
-                        ))}
-                      </div>
-                    ) : (
-                      <div className="text-center p-6 border rounded-lg mb-6">
-                        <p className="text-muted-foreground">No questions added yet.</p>
-                        <p className="text-sm text-muted-foreground mt-1">Add questions below to build your quiz.</p>
-                      </div>
-                    )}
-
-                    <Card>
-                      <CardHeader>
-                        <CardTitle className="text-sm">Add New Question</CardTitle>
-                      </CardHeader>
-                      <CardContent className="space-y-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="questionText">Question Text</Label>
+                          <Label htmlFor="question-text" className="text-foreground">Question Text</Label>
                           <Textarea
-                            id="questionText"
-                            placeholder="e.g. What is the correct way to declare a variable in JavaScript?"
+                            id="question-text"
                             value={newQuestion.text}
                             onChange={(e) => setNewQuestion({ ...newQuestion, text: e.target.value })}
+                            className="bg-input text-foreground border-border placeholder:text-muted-foreground"
+                            placeholder="Enter the question here..."
                           />
-                        </div>
 
-                        <div className="space-y-2">
-                          <Label>Question Type</Label>
-                          <RadioGroup
-                            value={newQuestion.type}
-                            onValueChange={updateQuestionType}
-                            className="flex space-x-4"
-                          >
-                            <div className="flex items-center space-x-2">
-                              <RadioGroupItem value="multiple-choice" id="multiple-choice" />
-                              <Label htmlFor="multiple-choice" className="cursor-pointer">
-                                Multiple Choice
-                              </Label>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                              <RadioGroupItem value="single-choice" id="single-choice" />
-                              <Label htmlFor="single-choice" className="cursor-pointer">
-                                Single Choice
-                              </Label>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                              <RadioGroupItem value="true-false" id="true-false" />
-                              <Label htmlFor="true-false" className="cursor-pointer">
-                                True/False
-                              </Label>
-                            </div>
-                          </RadioGroup>
-                        </div>
-
-                        {(newQuestion.type === "multiple-choice" || newQuestion.type === "single-choice") && (
-                          <div className="space-y-2">
-                            <Label>Answer Options</Label>
+                          {(newQuestion.type === "multiple-choice" || newQuestion.type === "single-choice") && (
                             <div className="space-y-2">
+                              <Label className="text-foreground">Options</Label>
                               {newQuestion.options.map((option, index) => (
                                 <div key={index} className="flex items-center gap-2">
-                                  <Checkbox
-                                    id={`option-${index}`}
-                                    checked={option.isCorrect}
-                                    onCheckedChange={() => toggleOptionCorrect(index)}
-                                  />
+                                  {newQuestion.type === "multiple-choice" && (
+                                    <Checkbox
+                                      id={`option-correct-${index}`}
+                                      checked={option.isCorrect}
+                                      onCheckedChange={() => toggleOptionCorrect(index)}
+                                    />
+                                  )}
+                                   {newQuestion.type === "single-choice" && (
+                                      <RadioGroup value={newQuestion.options.findIndex(opt => opt.isCorrect).toString()} onValueChange={() => toggleOptionCorrect(index)}>
+                                          <RadioGroupItem value={index.toString()} id={`option-correct-${index}`} />
+                                      </RadioGroup>
+                                  )}
                                   <Input
-                                    placeholder={`Option ${index + 1}`}
+                                    type="text"
                                     value={option.text}
                                     onChange={(e) => updateOption(index, e.target.value)}
-                                    className="flex-1"
+                                    className="flex-grow bg-input text-foreground border-border placeholder:text-muted-foreground"
+                                    placeholder={`Option ${index + 1}`}
                                   />
-                                  {index > 1 && (
-                                    <Button
-                                      variant="ghost"
-                                      size="sm"
-                                      className="h-8 text-red-500 hover:text-red-700 hover:bg-red-50"
-                                      onClick={() => {
-                                        const updatedOptions = newQuestion.options.filter((_, i) => i !== index)
-                                        setNewQuestion({ ...newQuestion, options: updatedOptions })
-                                      }}
-                                    >
-                                      <Trash2 className="h-4 w-4" />
-                                    </Button>
-                                  )}
                                 </div>
                               ))}
-
-                              {newQuestion.options.length < 6 && (
-                                <Button variant="outline" size="sm" className="mt-2" onClick={addOption}>
-                                  <Plus className="h-4 w-4 mr-2" />
-                                  Add Option
-                                </Button>
-                              )}
+                               <Button variant="outline" size="sm" onClick={addOption} className="mt-2">
+                                Add Option
+                              </Button>
                             </div>
-                            <p className="text-xs text-muted-foreground">
-                              {newQuestion.type === "multiple-choice"
-                                ? "Check all correct answers."
-                                : "Check the single correct answer."}
-                            </p>
-                          </div>
-                        )}
+                          )}
 
-                        {newQuestion.type === "true-false" && (
-                          <div className="space-y-2">
-                            <Label>Correct Answer</Label>
-                            <RadioGroup
-                              value={newQuestion.correctAnswer ? "true" : "false"}
-                              onValueChange={(value) =>
-                                setNewQuestion({
-                                  ...newQuestion,
-                                  correctAnswer: value === "true",
-                                })
-                              }
-                              className="flex space-x-4"
-                            >
-                              <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="true" id="answer-true" />
-                                <Label htmlFor="answer-true" className="cursor-pointer">
-                                  True
-                                </Label>
-                              </div>
-                              <div className="flex items-center space-x-2">
-                                <RadioGroupItem value="false" id="answer-false" />
-                                <Label htmlFor="answer-false" className="cursor-pointer">
-                                  False
-                                </Label>
-                              </div>
-                            </RadioGroup>
-                          </div>
-                        )}
-
-                        <Button
-                          className="w-full"
-                          onClick={addQuestion}
-                          disabled={
-                            !newQuestion.text ||
-                            ((newQuestion.type === "multiple-choice" || newQuestion.type === "single-choice") &&
-                              !newQuestion.options.some((opt) => opt.text.trim() !== ""))
-                          }
-                        >
-                          <Plus className="h-4 w-4 mr-2" />
-                          Add Question
-                        </Button>
-                      </CardContent>
-                    </Card>
+                          {newQuestion.type === "true-false" && (
+                             <div className="space-y-2">
+                               <Label className="text-foreground">Correct Answer</Label>
+                               <RadioGroup
+                                 value={newQuestion.options[0]?.isCorrect ? "true" : "false"}
+                                 onValueChange={(value) => setNewQuestion({ ...newQuestion, options: [{text: "True/False Option", isCorrect: value === "true"}] })}
+                                 className="flex space-x-4"
+                               >
+                                  <div className="flex items-center space-x-2">
+                                      <RadioGroupItem value="true" id="true" />
+                                      <Label htmlFor="true" className="text-foreground">True</Label>
+                                  </div>
+                                  <div className="flex items-center space-x-2">
+                                      <RadioGroupItem value="false" id="false" />
+                                      <Label htmlFor="false" className="text-foreground">False</Label>
+                                  </div>
+                               </RadioGroup>
+                             </div>
+                          )}
+                        </div>
+                        <Button onClick={addQuestion} disabled={!newQuestion.text} className="mt-4 w-full">Add Question to Quiz</Button>
+                      </div>
+                    </div>
                   </div>
-                </div>
-
-                <DialogFooter>
-                  <Button
-                    variant="outline"
-                    onClick={() => {
-                      setShowAddQuizDialog(false)
-                      setCurrentQuizIndex(null)
-                      setNewQuiz({
-                        title: "",
-                        description: "",
-                        passingScore: 70,
-                        timeLimit: 0,
-                        questions: [],
-                      })
-                    }}
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    onClick={currentQuizIndex !== null ? updateQuiz : addQuiz}
-                    disabled={!newQuiz.title || newQuiz.questions.length === 0}
-                    className="bg-gradient-to-r from-rose-500 to-orange-500 hover:from-rose-600 hover:to-orange-600"
-                  >
-                    {currentQuizIndex !== null ? "Update Quiz" : "Save Quiz"}
-                  </Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
-          </div>
-
-          {quizzes.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {quizzes.map((quiz, index) => (
-                <Card key={quiz.id} className="overflow-hidden">
-                  <CardHeader className="bg-muted/30 pb-3">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <CardTitle className="text-base">{quiz.title}</CardTitle>
-                        <CardDescription className="mt-1 line-clamp-2">
-                          {quiz.description || "No description provided."}
-                        </CardDescription>
-                      </div>
-                      <div className="flex gap-1">
-                        <Button variant="ghost" size="sm" className="h-8" onClick={() => editQuiz(index)}>
-                          <Edit className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-8 text-red-500 hover:text-red-700 hover:bg-red-50"
-                          onClick={() => deleteQuiz(index)}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="p-4">
-                    <div className="flex flex-col gap-2 text-sm">
-                      <div className="flex items-center justify-between">
-                        <span className="text-muted-foreground">Questions:</span>
-                        <span className="font-medium">{quiz.questions.length}</span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-muted-foreground">Passing Score:</span>
-                        <span className="font-medium">{quiz.passingScore}%</span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-muted-foreground">Time Limit:</span>
-                        <span className="font-medium">
-                          {quiz.timeLimit > 0 ? `${quiz.timeLimit} minutes` : "No limit"}
-                        </span>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center p-12 border rounded-lg">
-              <FileQuestion className="h-12 w-12 mx-auto text-muted-foreground" />
-              <h3 className="mt-4 text-lg font-medium">No Quizzes Yet</h3>
-              <p className="mt-2 text-muted-foreground max-w-sm mx-auto">
-                Create quizzes to test your students' knowledge and provide them with valuable feedback.
-              </p>
-              <Button
-                className="mt-6 bg-gradient-to-r from-rose-500 to-orange-500 hover:from-rose-600 hover:to-orange-600"
-                onClick={() => setShowAddQuizDialog(true)}
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                Create Your First Quiz
-              </Button>
-            </div>
-          )}
-        </TabsContent>
-
-        <TabsContent value="assignments" className="p-4 pt-6">
-          <div className="flex justify-between items-center mb-6">
-            <div>
-              <h3 className="text-lg font-semibold">Course Assignments</h3>
-              <p className="text-sm text-muted-foreground">
-                Create assignments for students to demonstrate their skills.
-              </p>
+                  <DialogFooter>
+                    <Button variant="outline" onClick={() => setShowAddQuizDialog(false)}>Cancel</Button>
+                    <Button onClick={currentQuizIndex !== null ? updateQuiz : addQuiz}>
+                      {currentQuizIndex !== null ? "Update Quiz" : "Add Quiz"}
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
             </div>
 
-            <Dialog open={showAddAssignmentDialog} onOpenChange={setShowAddAssignmentDialog}>
-              <DialogTrigger asChild>
-                <Button className="bg-gradient-to-r from-rose-500 to-orange-500 hover:from-rose-600 hover:to-orange-600">
-                  <Plus className="h-4 w-4 mr-2" />
-                  Create Assignment
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>
-                    {currentAssignmentIndex !== null ? "Edit Assignment" : "Create New Assignment"}
-                  </DialogTitle>
-                  <DialogDescription>Create an assignment for students to complete and submit.</DialogDescription>
-                </DialogHeader>
-
-                <div className="space-y-4 py-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="assignmentTitle">Assignment Title</Label>
-                    <Input
-                      id="assignmentTitle"
-                      placeholder="e.g. Build a Responsive Landing Page"
-                      value={newAssignment.title}
-                      onChange={(e) => setNewAssignment({ ...newAssignment, title: e.target.value })}
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="assignmentDescription">Description</Label>
-                    <Textarea
-                      id="assignmentDescription"
-                      placeholder="Briefly describe the purpose of this assignment..."
-                      value={newAssignment.description}
-                      onChange={(e) => setNewAssignment({ ...newAssignment, description: e.target.value })}
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="assignmentInstructions">Detailed Instructions</Label>
-                    <Textarea
-                      id="assignmentInstructions"
-                      placeholder="Provide detailed instructions on what students need to do..."
-                      className="min-h-32"
-                      value={newAssignment.instructions}
-                      onChange={(e) => setNewAssignment({ ...newAssignment, instructions: e.target.value })}
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="submissionType">Submission Type</Label>
-                      <Select
-                        value={newAssignment.submissionType}
-                        onValueChange={(value) => setNewAssignment({ ...newAssignment, submissionType: value })}
-                      >
-                        <SelectTrigger id="submissionType">
-                          <SelectValue placeholder="Select type" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="text">Text Submission</SelectItem>
-                          <SelectItem value="file">File Upload</SelectItem>
-                          <SelectItem value="url">External URL</SelectItem>
-                          <SelectItem value="project">Project Submission</SelectItem>
-                        </SelectContent>
-                      </Select>
+            {/* List of Quizzes */}
+            <div className="space-y-3">
+              {quizzes.length === 0 ? (
+                <p className="text-muted-foreground text-sm">No quizzes added yet.</p>
+              ) : (
+                quizzes.map((quiz, index) => (
+                  <div key={quiz.id} className="flex items-center justify-between border border-border rounded-md p-3 bg-background">
+                    <div>
+                      <p className="font-medium text-foreground">{quiz.title}</p>
+                      <p className="text-sm text-muted-foreground">{quiz.questions.length} question(s)</p>
                     </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="passingGrade">Passing Grade (%)</Label>
-                      <Input
-                        id="passingGrade"
-                        type="number"
-                        min="0"
-                        max="100"
-                        value={newAssignment.passingGrade}
-                        onChange={(e) =>
-                          setNewAssignment({ ...newAssignment, passingGrade: Number.parseInt(e.target.value) || 0 })
-                        }
-                      />
+                    <div className="flex items-center gap-2">
+                      <Button variant="ghost" size="icon" onClick={() => editQuiz(index)} className="text-muted-foreground hover:text-foreground">
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                      <Button variant="ghost" size="icon" onClick={() => deleteQuiz(index)} className="text-muted-foreground hover:text-destructive">
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
                     </div>
                   </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="deadline">Deadline (days after enrollment)</Label>
-                      <Input
-                        id="deadline"
-                        type="number"
-                        min="1"
-                        value={newAssignment.deadline}
-                        onChange={(e) =>
-                          setNewAssignment({ ...newAssignment, deadline: Number.parseInt(e.target.value) || 7 })
-                        }
-                      />
-                      <p className="text-xs text-muted-foreground">
-                        Number of days students have to complete after enrolling
-                      </p>
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="maxAttempts">Maximum Attempts</Label>
-                      <Input
-                        id="maxAttempts"
-                        type="number"
-                        min="1"
-                        value={newAssignment.maxAttempts}
-                        onChange={(e) =>
-                          setNewAssignment({ ...newAssignment, maxAttempts: Number.parseInt(e.target.value) || 1 })
-                        }
-                      />
-                      <p className="text-xs text-muted-foreground">
-                        How many times students can submit this assignment
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <DialogFooter>
-                  <Button
-                    variant="outline"
-                    onClick={() => {
-                      setShowAddAssignmentDialog(false)
-                      setCurrentAssignmentIndex(null)
-                      setNewAssignment({
-                        title: "",
-                        description: "",
-                        instructions: "",
-                        deadline: 7,
-                        passingGrade: 70,
-                        submissionType: "text",
-                        maxAttempts: 3,
-                      })
-                    }}
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    onClick={currentAssignmentIndex !== null ? updateAssignment : addAssignment}
-                    disabled={!newAssignment.title}
-                    className="bg-gradient-to-r from-rose-500 to-orange-500 hover:from-rose-600 hover:to-orange-600"
-                  >
-                    {currentAssignmentIndex !== null ? "Update Assignment" : "Save Assignment"}
-                  </Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
-          </div>
-
-          {assignments.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {assignments.map((assignment, index) => (
-                <Card key={assignment.id} className="overflow-hidden">
-                  <CardHeader className="bg-muted/30 pb-3">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <CardTitle className="text-base">{assignment.title}</CardTitle>
-                        <CardDescription className="mt-1 line-clamp-2">
-                          {assignment.description || "No description provided."}
-                        </CardDescription>
-                      </div>
-                      <div className="flex gap-1">
-                        <Button variant="ghost" size="sm" className="h-8" onClick={() => editAssignment(index)}>
-                          <Edit className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-8 text-red-500 hover:text-red-700 hover:bg-red-50"
-                          onClick={() => deleteAssignment(index)}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="p-4">
-                    <div className="flex flex-col gap-2 text-sm">
-                      <div className="flex items-center justify-between">
-                        <span className="text-muted-foreground">Submission Type:</span>
-                        <span className="font-medium capitalize">{assignment.submissionType}</span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-muted-foreground">Deadline:</span>
-                        <span className="font-medium">{assignment.deadline} days</span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-muted-foreground">Passing Grade:</span>
-                        <span className="font-medium">{assignment.passingGrade}%</span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-muted-foreground">Maximum Attempts:</span>
-                        <span className="font-medium">{assignment.maxAttempts}</span>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+                ))
+              )}
             </div>
-          ) : (
-            <div className="text-center p-12 border rounded-lg">
-              <FileText className="h-12 w-12 mx-auto text-muted-foreground" />
-              <h3 className="mt-4 text-lg font-medium">No Assignments Yet</h3>
-              <p className="mt-2 text-muted-foreground max-w-sm mx-auto">
-                Create assignments to help students apply what they've learned and demonstrate their skills.
-              </p>
-              <Button
-                className="mt-6 bg-gradient-to-r from-rose-500 to-orange-500 hover:from-rose-600 hover:to-orange-600"
-                onClick={() => setShowAddAssignmentDialog(true)}
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                Create Your First Assignment
-              </Button>
+          </TabsContent>
+
+          {/* Assignments Tab */}
+          <TabsContent value="assignments">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-semibold text-foreground">Assignments</h3>
+              {/* Add Assignment Dialog Trigger */}
+               <Dialog open={showAddAssignmentDialog} onOpenChange={setShowAddAssignmentDialog}>
+                 <DialogTrigger asChild>
+                    <Button variant="outline" size="sm" onClick={() => { setCurrentAssignmentIndex(null); setNewAssignment({ title: "", description: "", instructions: "", deadline: 7, passingGrade: 70, submissionType: "text", maxAttempts: 3 }); setShowAddAssignmentDialog(true); }}>
+                      <Plus className="mr-2 h-4 w-4" /> Add Assignment
+                    </Button>
+                 </DialogTrigger>
+                {/* Add/Edit Assignment Dialog Content */}
+                <DialogContent className="sm:max-w-[600px] bg-card border-border">
+                  <DialogHeader>
+                    <DialogTitle className="text-foreground">{currentAssignmentIndex !== null ? "Edit Assignment" : "Add New Assignment"}</DialogTitle>
+                    <DialogDescription className="text-muted-foreground">
+                       Define the assignment details, instructions, and submission criteria.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="grid gap-4 py-4 max-h-[70vh] overflow-y-auto pr-6">
+                      <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="assignment-title" className="text-right text-foreground">Title</Label>
+                        <Input
+                          id="assignment-title"
+                          value={newAssignment.title}
+                          onChange={(e) => setNewAssignment({ ...newAssignment, title: e.target.value })}
+                          className="col-span-3 bg-input text-foreground border-border placeholder:text-muted-foreground"
+                          placeholder="e.g., Final Project Proposal"
+                        />
+                      </div>
+                     <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="assignment-description" className="text-right text-foreground">Description</Label>
+                        <Textarea
+                          id="assignment-description"
+                          value={newAssignment.description}
+                          onChange={(e) => setNewAssignment({ ...newAssignment, description: e.target.value })}
+                          className="col-span-3 bg-input text-foreground border-border placeholder:text-muted-foreground"
+                          placeholder="Brief description of the assignment"
+                        />
+                      </div>
+                      <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="assignment-instructions" className="text-right text-foreground">Instructions</Label>
+                        <Textarea
+                          id="assignment-instructions"
+                          value={newAssignment.instructions}
+                          onChange={(e) => setNewAssignment({ ...newAssignment, instructions: e.target.value })}
+                          className="col-span-3 h-24 bg-input text-foreground border-border placeholder:text-muted-foreground"
+                          placeholder="Detailed instructions for the student"
+                        />
+                      </div>
+                      <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="assignment-deadline" className="text-right text-foreground">Deadline (Days)</Label>
+                        <Input
+                          id="assignment-deadline"
+                          type="number"
+                          min="1"
+                          value={newAssignment.deadline}
+                          onChange={(e) => setNewAssignment({ ...newAssignment, deadline: parseInt(e.target.value) || 1 })}
+                          className="col-span-3 bg-input text-foreground border-border placeholder:text-muted-foreground"
+                          placeholder="Days from enrollment"
+                        />
+                      </div>
+                       <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="assignment-passing-grade" className="text-right text-foreground">Passing Grade (%)</Label>
+                        <Input
+                          id="assignment-passing-grade"
+                          type="number"
+                          min="0"
+                          max="100"
+                          value={newAssignment.passingGrade}
+                          onChange={(e) => setNewAssignment({ ...newAssignment, passingGrade: parseInt(e.target.value) || 0 })}
+                          className="col-span-3 bg-input text-foreground border-border placeholder:text-muted-foreground"
+                        />
+                      </div>
+                       <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="assignment-submission-type" className="text-right text-foreground">Submission Type</Label>
+                         <Select value={newAssignment.submissionType} onValueChange={(value: Assignment["submissionType"]) => setNewAssignment({ ...newAssignment, submissionType: value })}>
+                            <SelectTrigger className="col-span-3 bg-input text-foreground border-border">
+                                <SelectValue placeholder="Select submission type" />
+                            </SelectTrigger>
+                            <SelectContent className="bg-popover text-popover-foreground border-border">
+                                <SelectItem value="text">Text Entry</SelectItem>
+                                <SelectItem value="file">File Upload</SelectItem>
+                                <SelectItem value="url">Website URL</SelectItem>
+                            </SelectContent>
+                        </Select>
+                      </div>
+                       <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="assignment-max-attempts" className="text-right text-foreground">Max Attempts</Label>
+                        <Input
+                          id="assignment-max-attempts"
+                          type="number"
+                          min="1"
+                          value={newAssignment.maxAttempts}
+                          onChange={(e) => setNewAssignment({ ...newAssignment, maxAttempts: parseInt(e.target.value) || 1 })}
+                          className="col-span-3 bg-input text-foreground border-border placeholder:text-muted-foreground"
+                        />
+                      </div>
+                  </div>
+                  <DialogFooter>
+                    <Button variant="outline" onClick={() => setShowAddAssignmentDialog(false)}>Cancel</Button>
+                     <Button onClick={currentAssignmentIndex !== null ? updateAssignment : addAssignment}>
+                      {currentAssignmentIndex !== null ? "Update Assignment" : "Add Assignment"}
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
             </div>
-          )}
-        </TabsContent>
-      </Tabs>
-    </div>
+
+            {/* List of Assignments */}
+            <div className="space-y-3">
+               {assignments.length === 0 ? (
+                 <p className="text-muted-foreground text-sm">No assignments added yet.</p>
+              ) : (
+                assignments.map((assignment, index) => (
+                  <div key={assignment.id} className="flex items-center justify-between border border-border rounded-md p-3 bg-background">
+                    <div>
+                      <p className="font-medium text-foreground">{assignment.title}</p>
+                      <p className="text-sm text-muted-foreground capitalize">Type: {assignment.submissionType}, Deadline: {assignment.deadline} days</p>
+                    </div>
+                     <div className="flex items-center gap-2">
+                      <Button variant="ghost" size="icon" onClick={() => editAssignment(index)} className="text-muted-foreground hover:text-foreground">
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                      <Button variant="ghost" size="icon" onClick={() => deleteAssignment(index)} className="text-muted-foreground hover:text-destructive">
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </TabsContent>
+        </Tabs>
+      </CardContent>
+    </Card>
   )
 }
