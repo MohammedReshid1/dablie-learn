@@ -83,7 +83,7 @@ export function HowItWorks() {
           ))}
         </div>
 
-        <div className="mt-20 bg-muted rounded-2xl p-8 md:p-12">
+        <div className="mt-20 bg-muted dark:bg-neutral-800/50 rounded-2xl p-8 md:p-12">
           <div className="grid md:grid-cols-2 gap-8 items-center">
             <div>
               <h3 className="text-2xl font-bold mb-4">Ready to start learning?</h3>
@@ -191,18 +191,21 @@ export function HowItWorks() {
                   className="rounded-xl object-cover h-full w-full"
                 />
               </div>
-              <div className="absolute -bottom-4 -right-4 bg-white rounded-xl p-4 shadow-lg">
+              <div className="absolute -bottom-4 -right-4 bg-card rounded-xl p-4 shadow-lg border dark:border-neutral-700">
                 <div className="flex items-center gap-3">
                   <div className="flex -space-x-2">
                     {[1, 2, 3].map((i) => (
-                      <div key={i} className="h-10 w-10 rounded-full border-2 border-white overflow-hidden">
-                        <img src={`/placeholder.svg?height=40&width=40`} alt={`Student ${i}`} />
+                      <div key={i} className="h-10 w-10 rounded-full border-2 border-white dark:border-neutral-700 overflow-hidden">
+                        <img
+                         src={`/placeholder.svg?height=40&width=40`}
+                         alt={`Student ${i}`}
+                        />
                       </div>
                     ))}
                   </div>
                   <div>
-                    <div className="font-medium">Join 10,000+ students</div>
-                    <div className="text-sm text-neutral-500">Learning new skills daily</div>
+                    <div className="font-medium text-foreground">Join 10,000+ students</div>
+                    <div className="text-sm text-muted-foreground">Learning new skills daily</div>
                   </div>
                 </div>
               </div>

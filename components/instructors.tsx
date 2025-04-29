@@ -47,17 +47,17 @@ const INSTRUCTORS = [
 
 export function Instructors() {
   return (
-    <section className="py-20 bg-white">
+    <section className="py-20 bg-background">
       <div className="container">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-12 gap-6">
           <div>
-            <h2 className="text-3xl font-bold tracking-tight text-neutral-900">
+            <h2 className="text-3xl font-bold tracking-tight text-foreground">
               Learn from{" "}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-500 to-orange-500">
                 Industry Experts
               </span>
             </h2>
-            <p className="mt-2 text-neutral-600 max-w-2xl">
+            <p className="mt-2 text-muted-foreground max-w-2xl">
               Our instructors are passionate professionals with years of real-world experience.
             </p>
           </div>
@@ -75,7 +75,7 @@ export function Instructors() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
             >
-              <Card className="overflow-hidden group border-0 shadow-md hover:shadow-xl transition-shadow">
+              <Card className="overflow-hidden group border-0 dark:border shadow-md hover:shadow-xl transition-shadow bg-card">
                 <CardContent className="p-0">
                   <div className="aspect-square overflow-hidden relative">
                     <img
@@ -94,18 +94,18 @@ export function Instructors() {
                     <div className="flex justify-between items-center">
                       <div className="flex items-center gap-1">
                         <Star className="h-5 w-5 fill-amber-400 text-amber-400" />
-                        <span className="font-medium">{instructor.rating}</span>
+                        <span className="font-medium text-foreground">{instructor.rating}</span>
                       </div>
-                      <div className="text-neutral-500 text-sm">{instructor.specialty}</div>
+                      <div className="text-muted-foreground text-sm">{instructor.specialty}</div>
                     </div>
 
                     <div className="flex justify-between text-sm">
-                      <div className="flex items-center gap-1">
-                        <Globe className="h-4 w-4 text-neutral-500" />
+                      <div className="flex items-center gap-1 text-muted-foreground">
+                        <Globe className="h-4 w-4" />
                         <span>{instructor.courses} courses</span>
                       </div>
-                      <div className="flex items-center gap-1">
-                        <Users className="h-4 w-4 text-neutral-500" />
+                      <div className="flex items-center gap-1 text-muted-foreground">
+                        <Users className="h-4 w-4" />
                         <span>{(instructor.students / 1000).toFixed(1)}k students</span>
                       </div>
                     </div>

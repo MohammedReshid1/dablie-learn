@@ -71,15 +71,15 @@ export function Testimonials() {
   const prevIndex = (currentIndex - 1 + TESTIMONIALS.length) % TESTIMONIALS.length
 
   return (
-    <section className="py-20 bg-neutral-50">
+    <section className="py-20 bg-neutral-50 dark:bg-neutral-900">
       <div className="container">
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <h2 className="text-3xl font-bold tracking-tight text-neutral-900">
+          <h2 className="text-3xl font-bold tracking-tight text-neutral-900 dark:text-white">
             What Our{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-500 to-orange-500">Students</span>{" "}
             Say
           </h2>
-          <p className="mt-4 text-lg text-neutral-600">
+          <p className="mt-4 text-lg text-neutral-600 dark:text-neutral-400">
             Join thousands of satisfied learners who have transformed their careers with DablieLearn.
           </p>
         </div>
@@ -95,7 +95,7 @@ export function Testimonials() {
                 transition={{ duration: 0.3 }}
                 className="max-w-3xl"
               >
-                <Card className="bg-white border-0 shadow-lg overflow-hidden">
+                <Card className="bg-white dark:bg-neutral-800 border-0 dark:border dark:border-neutral-700 shadow-lg overflow-hidden">
                   <CardContent className="p-0">
                     <div className="grid md:grid-cols-5">
                       <div className="md:col-span-2 bg-gradient-to-br from-rose-500 to-orange-500 p-8 flex flex-col justify-between text-white">
@@ -119,7 +119,7 @@ export function Testimonials() {
                         </div>
                       </div>
                       <div className="md:col-span-3 p-8 flex items-center">
-                        <blockquote className="text-lg italic text-neutral-700">
+                        <blockquote className="text-lg italic text-neutral-700 dark:text-neutral-300">
                           "{currentTestimonial.content}"
                         </blockquote>
                       </div>
@@ -135,7 +135,7 @@ export function Testimonials() {
               onClick={prevTestimonial}
               variant="outline"
               size="icon"
-              className="rounded-full bg-white shadow-md hover:bg-neutral-100"
+              className="rounded-full bg-white dark:bg-neutral-800 shadow-md hover:bg-neutral-100 dark:hover:bg-neutral-700 border-neutral-200 dark:border-neutral-700"
             >
               <ChevronLeft className="h-5 w-5" />
             </Button>
@@ -146,7 +146,7 @@ export function Testimonials() {
               onClick={nextTestimonial}
               variant="outline"
               size="icon"
-              className="rounded-full bg-white shadow-md hover:bg-neutral-100"
+              className="rounded-full bg-white dark:bg-neutral-800 shadow-md hover:bg-neutral-100 dark:hover:bg-neutral-700 border-neutral-200 dark:border-neutral-700"
             >
               <ChevronRight className="h-5 w-5" />
             </Button>
@@ -161,7 +161,7 @@ export function Testimonials() {
               className={`w-3 h-3 mx-1 rounded-full transition-colors ${
                 index === currentIndex
                   ? "bg-gradient-to-r from-rose-500 to-orange-500"
-                  : "bg-neutral-300 hover:bg-neutral-400"
+                  : "bg-neutral-300 dark:bg-neutral-600 hover:bg-neutral-400 dark:hover:bg-neutral-500"
               }`}
               aria-label={`Go to testimonial ${index + 1}`}
             />

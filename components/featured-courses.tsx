@@ -2,14 +2,16 @@
 
 import { useState } from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { ChevronRight, Clock, Share2, Star, Users } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { motion } from "framer-motion"
+import type { Course } from "@/lib/types"
+import { CourseCard } from "@/components/course-card"
 
-// Sample course data
-const COURSES = [
+// Sample course data - Restore specific image placeholders
+const COURSES: Course[] = [
   {
     id: "1",
     title: "Complete Web Development Bootcamp",
@@ -142,65 +144,7 @@ export function FeaturedCourses() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
             >
-              <Card className="h-full overflow-hidden group">
-                <div className="relative overflow-hidden aspect-video">
-                  <img
-                    src={course.image || "/placeholder.svg"}
-                    alt={course.title}
-                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                  />
-                  {course.bestseller && (
-                    <Badge className="absolute top-3 left-3 bg-gradient-to-r from-amber-500 to-orange-500">
-                      Bestseller
-                    </Badge>
-                  )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
-                    <div className="p-4 w-full">
-                      <Button className="w-full bg-white text-neutral-900 hover:bg-white/90 dark:bg-neutral-900 dark:text-white dark:hover:bg-neutral-800">
-                        Preview Course
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between mb-2">
-                    <Badge variant="outline" className="bg-secondary hover:bg-secondary/80 text-foreground">
-                      {course.category}
-                    </Badge>
-                    <div className="flex items-center">
-                      <Star className="h-4 w-4 fill-amber-400 text-amber-400 mr-1" />
-                      <span className="text-sm font-medium">{course.rating}</span>
-                    </div>
-                  </div>
-                  <h3 className="font-bold text-xl mb-2 line-clamp-2">{course.title}</h3>
-                  <p className="text-muted-foreground text-sm mb-4">By {course.instructor}</p>
-                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                    <div className="flex items-center">
-                      <Users className="h-4 w-4 mr-1" />
-                      {course.students.toLocaleString()}
-                    </div>
-                    <div className="flex items-center">
-                      <Clock className="h-4 w-4 mr-1" />
-                      {course.hours} hours
-                    </div>
-                    <div className="text-sm">{course.level}</div>
-                  </div>
-                </CardContent>
-                <CardFooter className="p-6 pt-0 flex items-center justify-between">
-                  <div className="font-bold text-xl">${course.price}</div>
-                  <div className="flex gap-2">
-                    <Button variant="ghost" size="icon" className="rounded-full hover:bg-secondary">
-                      <Share2 className="h-5 w-5" />
-                    </Button>
-                    <Button
-                      asChild
-                      className="rounded-full bg-gradient-to-r from-rose-500 to-orange-500 hover:from-rose-600 hover:to-orange-600"
-                    >
-                      <Link href={`/courses/${course.id}`}>Enroll Now</Link>
-                    </Button>
-                  </div>
-                </CardFooter>
-              </Card>
+              <CourseCard course={course} />
             </motion.div>
           ))}
         </div>

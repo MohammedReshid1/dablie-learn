@@ -38,7 +38,7 @@ export function LandingHero() {
   }, [])
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-background to-muted py-20 md:py-32 transition-colors duration-300">
+    <section className="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden bg-gradient-to-b from-background to-secondary/30">
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-[40%] -left-[10%] h-[80%] w-[60%] rounded-full bg-gradient-to-br from-rose-100/30 to-fuchsia-100/30 dark:from-rose-900/10 dark:to-fuchsia-900/10 blur-3xl" />
         <div className="absolute -bottom-[30%] -right-[10%] h-[70%] w-[60%] rounded-full bg-gradient-to-br from-orange-100/30 to-amber-100/30 dark:from-orange-900/10 dark:to-amber-900/10 blur-3xl" />
@@ -103,7 +103,7 @@ export function LandingHero() {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="relative aspect-[4/3] lg:aspect-square"
+            className="relative aspect-[4/3] lg:aspect-square lg:order-last order-first mb-12 lg:mb-0"
           >
             <div className="absolute top-[10%] left-[10%] h-[80%] w-[80%] rounded-2xl bg-gradient-to-br from-rose-500 via-fuchsia-500 to-orange-500 blur-md opacity-20" />
             <div className="relative h-full w-full rounded-2xl overflow-hidden border-8 border-background shadow-xl">

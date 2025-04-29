@@ -2,54 +2,13 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { ChevronRight, CheckCircle, DollarSign, Users, Award } from "lucide-react"
+import { PageLayout } from "@/components/page-layout"
 
 export default function TeachPage() {
   return (
-    <div className="flex flex-col min-h-screen bg-background">
-      <header className="fixed top-0 w-full z-50 backdrop-blur-md bg-background/80 border-b border-border">
-        <div className="container flex h-16 items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="relative flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-rose-500 via-fuchsia-500 to-orange-500">
-              <span className="font-bold text-white text-xl">D</span>
-            </div>
-            <span className="font-bold text-xl">DablieLearn</span>
-          </Link>
-          <nav className="hidden md:flex items-center gap-6">
-            <Link
-              href="/courses"
-              className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors"
-            >
-              Explore
-            </Link>
-            <Link
-              href="/categories"
-              className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors"
-            >
-              Categories
-            </Link>
-            <Link href="/teach" className="text-sm font-medium text-rose-600">
-              Teach
-            </Link>
-          </nav>
-          <div className="flex items-center gap-4">
-            <Link
-              href="/login"
-              className="hidden sm:block text-sm font-medium text-foreground/80 hover:text-foreground"
-            >
-              Log in
-            </Link>
-            <Button
-              asChild
-              className="rounded-full bg-gradient-to-r from-rose-500 to-orange-500 hover:from-rose-600 hover:to-orange-600"
-            >
-              <Link href="/signup">Get Started</Link>
-            </Button>
-          </div>
-        </div>
-      </header>
-
-      <main className="flex-1 pt-16">
-        <section className="py-20 bg-gradient-to-r from-rose-50 to-orange-50">
+    <PageLayout>
+      <main className="flex-1">
+        <section className="py-20 bg-gradient-to-r from-rose-50 to-orange-50 dark:from-neutral-900 dark:to-neutral-800">
           <div className="container">
             <div className="max-w-3xl mx-auto text-center">
               <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-foreground mb-6">
@@ -86,12 +45,12 @@ export default function TeachPage() {
             </div>
 
             <div className="grid md:grid-cols-3 gap-8">
-              <Card>
+              <Card className="bg-card border-border">
                 <CardContent className="p-6 flex flex-col items-center text-center">
-                  <div className="h-16 w-16 rounded-full bg-rose-100 flex items-center justify-center mb-4">
-                    <DollarSign className="h-8 w-8 text-rose-600" />
+                  <div className="h-16 w-16 rounded-full bg-rose-100 dark:bg-secondary flex items-center justify-center mb-4">
+                    <DollarSign className="h-8 w-8 text-rose-600 dark:text-rose-400" />
                   </div>
-                  <h3 className="text-xl font-bold mb-2">Earn Revenue</h3>
+                  <h3 className="text-xl font-bold mb-2 text-foreground">Earn Revenue</h3>
                   <p className="text-muted-foreground">
                     Earn money every time a student purchases your course. Our revenue share model ensures you get paid
                     fairly for your expertise.
@@ -99,24 +58,24 @@ export default function TeachPage() {
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="bg-card border-border">
                 <CardContent className="p-6 flex flex-col items-center text-center">
-                  <div className="h-16 w-16 rounded-full bg-orange-100 flex items-center justify-center mb-4">
-                    <Users className="h-8 w-8 text-orange-600" />
+                  <div className="h-16 w-16 rounded-full bg-orange-100 dark:bg-secondary flex items-center justify-center mb-4">
+                    <Users className="h-8 w-8 text-orange-600 dark:text-orange-400" />
                   </div>
-                  <h3 className="text-xl font-bold mb-2">Reach Millions</h3>
+                  <h3 className="text-xl font-bold mb-2 text-foreground">Reach Millions</h3>
                   <p className="text-muted-foreground">
                     Get access to millions of students across the globe who are eager to learn from experts like you.
                   </p>
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="bg-card border-border">
                 <CardContent className="p-6 flex flex-col items-center text-center">
-                  <div className="h-16 w-16 rounded-full bg-fuchsia-100 flex items-center justify-center mb-4">
-                    <Award className="h-8 w-8 text-fuchsia-600" />
+                  <div className="h-16 w-16 rounded-full bg-fuchsia-100 dark:bg-secondary flex items-center justify-center mb-4">
+                    <Award className="h-8 w-8 text-fuchsia-600 dark:text-fuchsia-400" />
                   </div>
-                  <h3 className="text-xl font-bold mb-2">Powerful Tools</h3>
+                  <h3 className="text-xl font-bold mb-2 text-foreground">Powerful Tools</h3>
                   <p className="text-muted-foreground">
                     Our intuitive course creation tools make it easy to build engaging courses with videos, quizzes, and
                     assignments.
@@ -127,7 +86,7 @@ export default function TeachPage() {
           </div>
         </section>
 
-        <section className="py-20 bg-neutral-50">
+        <section className="py-20 bg-neutral-50 dark:bg-neutral-900">
           <div className="container">
             <div className="grid md:grid-cols-2 gap-12 items-center">
               <div>
@@ -138,7 +97,7 @@ export default function TeachPage() {
                       1
                     </div>
                     <div>
-                      <h3 className="font-bold text-xl mb-2">Plan Your Course</h3>
+                      <h3 className="font-bold text-xl mb-2 text-foreground">Plan Your Course</h3>
                       <p className="text-muted-foreground">
                         Decide what you'll teach and how you'll structure your course to provide the most value to
                         students.
@@ -151,7 +110,7 @@ export default function TeachPage() {
                       2
                     </div>
                     <div>
-                      <h3 className="font-bold text-xl mb-2">Create Your Content</h3>
+                      <h3 className="font-bold text-xl mb-2 text-foreground">Create Your Content</h3>
                       <p className="text-muted-foreground">
                         Record high-quality videos, create engaging assignments, and develop comprehensive resources.
                       </p>
@@ -163,7 +122,7 @@ export default function TeachPage() {
                       3
                     </div>
                     <div>
-                      <h3 className="font-bold text-xl mb-2">Launch and Promote</h3>
+                      <h3 className="font-bold text-xl mb-2 text-foreground">Launch and Promote</h3>
                       <p className="text-muted-foreground">
                         Publish your course and use our marketing tools to reach students interested in your topic.
                       </p>
@@ -191,12 +150,12 @@ export default function TeachPage() {
                     className="rounded-xl object-cover h-full w-full"
                   />
                 </div>
-                <div className="absolute -bottom-4 -right-4 bg-white rounded-xl p-4 shadow-lg">
+                <div className="absolute -bottom-4 -right-4 bg-card rounded-xl p-4 shadow-lg border dark:border-neutral-700">
                   <div className="flex items-center gap-3">
-                    <CheckCircle className="h-10 w-10 text-green-500" />
+                    <CheckCircle className="h-10 w-10 text-green-500 dark:text-green-400" />
                     <div>
-                      <div className="font-medium">Join 10,000+ instructors</div>
-                      <div className="text-sm text-neutral-500">Teaching on DablieLearn</div>
+                      <div className="font-medium text-foreground">Join 10,000+ instructors</div>
+                      <div className="text-sm text-muted-foreground">Teaching on DablieLearn</div>
                     </div>
                   </div>
                 </div>
@@ -205,98 +164,6 @@ export default function TeachPage() {
           </div>
         </section>
       </main>
-
-      <footer className="bg-neutral-900 text-neutral-300 pt-16 pb-8 dark:bg-black dark:text-neutral-300">
-        <div className="container">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-12">
-            <div className="lg:col-span-2">
-              <Link href="/" className="flex items-center gap-2 mb-6">
-                <div className="relative flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-rose-500 via-fuchsia-500 to-orange-500">
-                  <span className="font-bold text-white text-xl">D</span>
-                </div>
-                <span className="font-bold text-xl text-white">DablieLearn</span>
-              </Link>
-              <p className="text-neutral-400 max-w-md mb-6">
-                DablieLearn is an e-learning platform that helps you acquire new skills and knowledge through
-                high-quality courses taught by industry experts.
-              </p>
-              <div className="flex space-x-4">{/* Social icons */}</div>
-            </div>
-
-            <div>
-              <h3 className="font-bold text-white mb-4">Categories</h3>
-              <ul className="space-y-3">
-                {["Development", "Design", "Marketing", "Business", "Data Science", "Illustration"].map((category) => (
-                  <li key={category}>
-                    <Link
-                      href={`/categories/${category.toLowerCase()}`}
-                      className="text-neutral-400 hover:text-white transition-colors"
-                    >
-                      {category}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div>
-              <h3 className="font-bold text-white mb-4">Company</h3>
-              <ul className="space-y-3">
-                {["About Us", "Careers", "Press", "Blog", "Affiliates", "Partnerships"].map((item) => (
-                  <li key={item}>
-                    <Link
-                      href={`/${item.toLowerCase().replace(/\s+/g, "-")}`}
-                      className="text-neutral-400 hover:text-white transition-colors"
-                    >
-                      {item}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div>
-              <h3 className="font-bold text-white mb-4">Support</h3>
-              <ul className="space-y-3">
-                {[
-                  "Help Center",
-                  "Contact Us",
-                  "Terms of Service",
-                  "Privacy Policy",
-                  "Accessibility",
-                  "Cookie Settings",
-                ].map((item) => (
-                  <li key={item}>
-                    <Link
-                      href={`/${item.toLowerCase().replace(/\s+/g, "-")}`}
-                      className="text-neutral-400 hover:text-white transition-colors"
-                    >
-                      {item}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-
-          <div className="border-t border-neutral-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-            <div className="text-neutral-500 text-sm">
-              © {new Date().getFullYear()} DablieLearn. All rights reserved.
-            </div>
-            <div className="flex gap-6">
-              <Link href="/terms" className="text-sm text-neutral-500 hover:text-neutral-300 transition-colors">
-                Terms
-              </Link>
-              <Link href="/privacy" className="text-sm text-neutral-500 hover:text-neutral-300 transition-colors">
-                Privacy
-              </Link>
-              <Link href="/cookies" className="text-sm text-neutral-500 hover:text-neutral-300 transition-colors">
-                Cookies
-              </Link>
-            </div>
-          </div>
-        </div>
-      </footer>
-    </div>
+    </PageLayout>
   )
 }

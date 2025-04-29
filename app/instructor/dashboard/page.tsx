@@ -91,27 +91,32 @@ export default function InstructorDashboardPage() {
   return (
     <InstructorShell>
       <DashboardHeader heading="Instructor Dashboard" text="Manage your courses and track your performance.">
-        <Button className="bg-gradient-to-r from-rose-500 to-orange-500 hover:from-rose-600 hover:to-orange-600">
-          <PlusCircle className="mr-2 h-4 w-4" />
-          Create New Course
+        <Button
+          asChild
+          className="bg-gradient-to-r from-rose-500 to-orange-500 hover:from-rose-600 hover:to-orange-600"
+        >
+          <Link href="/instructor/courses/new">
+            <PlusCircle className="mr-2 h-4 w-4" />
+            Create New Course
+          </Link>
         </Button>
       </DashboardHeader>
 
       <div className="grid gap-8">
         <section>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <Card>
+            <Card className="bg-card border-border">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-neutral-500">Total Students</p>
-                    <h3 className="text-2xl font-bold mt-1">23,796</h3>
+                    <p className="text-sm font-medium text-muted-foreground">Total Students</p>
+                    <h3 className="text-2xl font-bold mt-1 text-foreground">23,796</h3>
                   </div>
-                  <div className="h-12 w-12 rounded-full bg-rose-100 flex items-center justify-center">
-                    <Users className="h-6 w-6 text-rose-600" />
+                  <div className="h-12 w-12 rounded-full bg-rose-100 dark:bg-secondary flex items-center justify-center">
+                    <Users className="h-6 w-6 text-rose-600 dark:text-rose-400" />
                   </div>
                 </div>
-                <div className="text-xs text-green-600 mt-2 flex items-center">
+                <div className="text-xs text-green-600 dark:text-green-400 mt-2 flex items-center">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 20 20"
@@ -129,18 +134,18 @@ export default function InstructorDashboardPage() {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="bg-card border-border">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-neutral-500">Total Revenue</p>
-                    <h3 className="text-2xl font-bold mt-1">$71,344.21</h3>
+                    <p className="text-sm font-medium text-muted-foreground">Total Revenue</p>
+                    <h3 className="text-2xl font-bold mt-1 text-foreground">$71,344.21</h3>
                   </div>
-                  <div className="h-12 w-12 rounded-full bg-green-100 flex items-center justify-center">
-                    <DollarSign className="h-6 w-6 text-green-600" />
+                  <div className="h-12 w-12 rounded-full bg-green-100 dark:bg-secondary flex items-center justify-center">
+                    <DollarSign className="h-6 w-6 text-green-600 dark:text-green-400" />
                   </div>
                 </div>
-                <div className="text-xs text-green-600 mt-2 flex items-center">
+                <div className="text-xs text-green-600 dark:text-green-400 mt-2 flex items-center">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 20 20"
@@ -158,18 +163,18 @@ export default function InstructorDashboardPage() {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="bg-card border-border">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-neutral-500">Course Rating</p>
-                    <h3 className="text-2xl font-bold mt-1">4.8</h3>
+                    <p className="text-sm font-medium text-muted-foreground">Course Rating</p>
+                    <h3 className="text-2xl font-bold mt-1 text-foreground">4.8</h3>
                   </div>
-                  <div className="h-12 w-12 rounded-full bg-amber-100 flex items-center justify-center">
-                    <Star className="h-6 w-6 text-amber-600" />
+                  <div className="h-12 w-12 rounded-full bg-amber-100 dark:bg-secondary flex items-center justify-center">
+                    <Star className="h-6 w-6 text-amber-600 dark:text-amber-400" />
                   </div>
                 </div>
-                <div className="text-xs text-green-600 mt-2 flex items-center">
+                <div className="text-xs text-green-600 dark:text-green-400 mt-2 flex items-center">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 20 20"
@@ -187,28 +192,28 @@ export default function InstructorDashboardPage() {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="bg-card border-border">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-neutral-500">Total Courses</p>
-                    <h3 className="text-2xl font-bold mt-1">3</h3>
+                    <p className="text-sm font-medium text-muted-foreground">Total Courses</p>
+                    <h3 className="text-2xl font-bold mt-1 text-foreground">3</h3>
                   </div>
-                  <div className="h-12 w-12 rounded-full bg-blue-100 flex items-center justify-center">
-                    <BookOpen className="h-6 w-6 text-blue-600" />
+                  <div className="h-12 w-12 rounded-full bg-blue-100 dark:bg-secondary flex items-center justify-center">
+                    <BookOpen className="h-6 w-6 text-blue-600 dark:text-blue-400" />
                   </div>
                 </div>
-                <div className="text-xs text-neutral-500 mt-2">2 published, 1 draft</div>
+                <div className="text-xs text-muted-foreground mt-2">2 published, 1 draft</div>
               </CardContent>
             </Card>
           </div>
         </section>
 
         <section>
-          <Card>
+          <Card className="bg-card border-border">
             <CardContent className="p-6">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-lg font-bold">Revenue Overview</h3>
+                <h3 className="text-lg font-bold text-foreground">Revenue Overview</h3>
                 <div className="flex items-center gap-2">
                   <Button variant="outline" size="sm">
                     Monthly
@@ -223,7 +228,6 @@ export default function InstructorDashboardPage() {
                 {Array(12)
                   .fill(null)
                   .map((_, i) => {
-                    // Generate random heights for the chart bars
                     const height = Math.floor(Math.random() * 80) + 20
                     return (
                       <div key={i} className="flex flex-col items-center">
@@ -231,7 +235,7 @@ export default function InstructorDashboardPage() {
                           className="w-12 bg-gradient-to-t from-rose-500 to-orange-500 rounded-t-md"
                           style={{ height: `${height}%` }}
                         ></div>
-                        <div className="text-xs text-neutral-500 mt-2">
+                        <div className="text-xs text-muted-foreground mt-2">
                           {["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][i]}
                         </div>
                       </div>
@@ -260,7 +264,7 @@ export default function InstructorDashboardPage() {
 
                 <TabsContent value="courses" className="space-y-4">
                   {INSTRUCTOR_COURSES.map((course) => (
-                    <Card key={course.id} className="overflow-hidden">
+                    <Card key={course.id} className="overflow-hidden bg-card border-border">
                       <CardContent className="p-0">
                         <div className="flex flex-col sm:flex-row">
                           <div className="sm:w-48 relative aspect-video sm:aspect-square">
@@ -280,10 +284,10 @@ export default function InstructorDashboardPage() {
                             </div>
                           </div>
                           <div className="flex-1 p-4">
-                            <h3 className="font-bold mb-1">{course.title}</h3>
-                            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm mb-3">
+                            <h3 className="font-bold mb-1 text-foreground">{course.title}</h3>
+                            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm mb-3 text-muted-foreground">
                               <div className="flex items-center">
-                                <Users className="h-4 w-4 text-neutral-500 mr-1" />
+                                <Users className="h-4 w-4 mr-1" />
                                 <span>{course.students.toLocaleString()} students</span>
                               </div>
                               {course.status === "published" && (
@@ -295,12 +299,12 @@ export default function InstructorDashboardPage() {
                                     </span>
                                   </div>
                                   <div className="flex items-center">
-                                    <DollarSign className="h-4 w-4 text-green-600 mr-1" />
+                                    <DollarSign className="h-4 w-4 text-green-600 dark:text-green-400 mr-1" />
                                     <span>${course.revenue.toLocaleString()}</span>
                                   </div>
                                 </>
                               )}
-                              <div className="text-neutral-500">Last updated: {course.lastUpdated}</div>
+                              <div className="text-muted-foreground">Last updated: {course.lastUpdated}</div>
                             </div>
 
                             <div className="flex flex-wrap justify-end gap-2">
@@ -329,7 +333,7 @@ export default function InstructorDashboardPage() {
 
                 <TabsContent value="reviews" className="space-y-4">
                   {RECENT_REVIEWS.map((review) => (
-                    <Card key={review.id}>
+                    <Card key={review.id} className="bg-card border-border">
                       <CardContent className="p-4">
                         <div className="flex items-start gap-4">
                           <div className="h-10 w-10 rounded-full bg-gradient-to-br from-rose-500 to-orange-500 flex items-center justify-center text-white font-bold">
@@ -338,8 +342,8 @@ export default function InstructorDashboardPage() {
                           <div className="flex-1">
                             <div className="flex items-center justify-between">
                               <div>
-                                <div className="font-medium">{review.studentName}</div>
-                                <div className="text-sm text-neutral-500">
+                                <div className="font-medium text-foreground">{review.studentName}</div>
+                                <div className="text-sm text-muted-foreground">
                                   {review.courseName} • {review.date}
                                 </div>
                               </div>
@@ -356,7 +360,7 @@ export default function InstructorDashboardPage() {
                                   ))}
                               </div>
                             </div>
-                            <p className="mt-2 text-neutral-700">{review.comment}</p>
+                            <p className="mt-2 text-foreground">{review.comment}</p>
                             <div className="mt-2 flex justify-end">
                               <Button variant="ghost" size="sm">
                                 Reply
@@ -372,32 +376,32 @@ export default function InstructorDashboardPage() {
             </div>
 
             <div className="space-y-6">
-              <Card>
+              <Card className="bg-card border-border">
                 <CardContent className="p-5">
-                  <h3 className="font-bold mb-4">Quick Stats</h3>
+                  <h3 className="font-bold mb-4 text-foreground">Quick Stats</h3>
                   <div className="space-y-4">
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between text-foreground">
                       <div className="flex items-center">
-                        <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center mr-3">
-                          <MessageSquare className="h-4 w-4 text-blue-600" />
+                        <div className="h-8 w-8 rounded-full bg-blue-100 dark:bg-secondary flex items-center justify-center mr-3">
+                          <MessageSquare className="h-4 w-4 text-blue-600 dark:text-blue-400" />
                         </div>
                         <span>Pending Q&A</span>
                       </div>
                       <span className="font-bold">12</span>
                     </div>
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between text-foreground">
                       <div className="flex items-center">
-                        <div className="h-8 w-8 rounded-full bg-amber-100 flex items-center justify-center mr-3">
-                          <Star className="h-4 w-4 text-amber-600" />
+                        <div className="h-8 w-8 rounded-full bg-amber-100 dark:bg-secondary flex items-center justify-center mr-3">
+                          <Star className="h-4 w-4 text-amber-600 dark:text-amber-400" />
                         </div>
                         <span>New Reviews</span>
                       </div>
                       <span className="font-bold">8</span>
                     </div>
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between text-foreground">
                       <div className="flex items-center">
-                        <div className="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center mr-3">
-                          <Users className="h-4 w-4 text-green-600" />
+                        <div className="h-8 w-8 rounded-full bg-green-100 dark:bg-secondary flex items-center justify-center mr-3">
+                          <Users className="h-4 w-4 text-green-600 dark:text-green-400" />
                         </div>
                         <span>New Students</span>
                       </div>
@@ -410,37 +414,37 @@ export default function InstructorDashboardPage() {
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="bg-card border-border">
                 <CardContent className="p-5">
-                  <h3 className="font-bold mb-4">To-Do List</h3>
+                  <h3 className="font-bold mb-4 text-foreground">To-Do List</h3>
                   <div className="space-y-4">
                     <div className="flex items-start gap-3">
-                      <div className="h-8 w-8 rounded-full bg-rose-100 flex items-center justify-center flex-shrink-0">
-                        <FileText className="h-4 w-4 text-rose-600" />
+                      <div className="h-8 w-8 rounded-full bg-rose-100 dark:bg-secondary flex items-center justify-center flex-shrink-0">
+                        <FileText className="h-4 w-4 text-rose-600 dark:text-rose-400" />
                       </div>
                       <div>
-                        <h4 className="font-medium text-sm">Complete course outline</h4>
-                        <div className="text-xs text-neutral-500 mt-1">
+                        <h4 className="font-medium text-sm text-foreground">Complete course outline</h4>
+                        <div className="text-xs text-muted-foreground mt-1">
                           React & Redux: Building Modern Web Applications
                         </div>
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
-                      <div className="h-8 w-8 rounded-full bg-rose-100 flex items-center justify-center flex-shrink-0">
-                        <BarChart3 className="h-4 w-4 text-rose-600" />
+                      <div className="h-8 w-8 rounded-full bg-rose-100 dark:bg-secondary flex items-center justify-center flex-shrink-0">
+                        <BarChart3 className="h-4 w-4 text-rose-600 dark:text-rose-400" />
                       </div>
                       <div>
-                        <h4 className="font-medium text-sm">Review monthly analytics</h4>
-                        <div className="text-xs text-neutral-500 mt-1">Check performance across all courses</div>
+                        <h4 className="font-medium text-sm text-foreground">Review monthly analytics</h4>
+                        <div className="text-xs text-muted-foreground mt-1">Check performance across all courses</div>
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
-                      <div className="h-8 w-8 rounded-full bg-rose-100 flex items-center justify-center flex-shrink-0">
-                        <MessageSquare className="h-4 w-4 text-rose-600" />
+                      <div className="h-8 w-8 rounded-full bg-rose-100 dark:bg-secondary flex items-center justify-center flex-shrink-0">
+                        <MessageSquare className="h-4 w-4 text-rose-600 dark:text-rose-400" />
                       </div>
                       <div>
-                        <h4 className="font-medium text-sm">Respond to student questions</h4>
-                        <div className="text-xs text-neutral-500 mt-1">12 questions awaiting response</div>
+                        <h4 className="font-medium text-sm text-foreground">Respond to student questions</h4>
+                        <div className="text-xs text-muted-foreground mt-1">12 questions awaiting response</div>
                       </div>
                     </div>
                     <Button variant="outline" size="sm" className="w-full">

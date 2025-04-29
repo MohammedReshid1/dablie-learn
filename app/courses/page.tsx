@@ -5,9 +5,13 @@ import { Slider } from "@/components/ui/slider"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Search, SlidersHorizontal, LayoutGrid, List } from "lucide-react"
 import Link from "next/link"
+import Image from "next/image"
+import type { Course } from "@/lib/types"
+import { CourseCard } from "@/components/course-card"
+import { PageLayout } from "@/components/page-layout"
 
-// Sample course data
-const COURSES = Array(12)
+// Sample course data - Restore specific image placeholder
+const COURSES: Course[] = Array(12)
   .fill(null)
   .map((_, i) => ({
     id: `course-${i + 1}`,
@@ -39,57 +43,18 @@ const COURSES = Array(12)
 
 export default function CoursesPage() {
   return (
-    <div className="flex flex-col min-h-screen bg-white">
-      <header className="fixed top-0 w-full z-50 backdrop-blur-md bg-white/80 border-b border-neutral-200">
-        <div className="container flex h-16 items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="relative flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-rose-500 via-fuchsia-500 to-orange-500">
-              <span className="font-bold text-white text-xl">D</span>
-            </div>
-            <span className="font-bold text-xl">DablieLearn</span>
-          </Link>
-          <nav className="hidden md:flex items-center gap-6">
-            <Link href="/courses" className="text-sm font-medium text-rose-600">
-              Explore
-            </Link>
-            <Link
-              href="/categories"
-              className="text-sm font-medium text-neutral-700 hover:text-neutral-900 transition-colors"
-            >
-              Categories
-            </Link>
-            <Link
-              href="/teach"
-              className="text-sm font-medium text-neutral-700 hover:text-neutral-900 transition-colors"
-            >
-              Teach
-            </Link>
-          </nav>
-          <div className="flex items-center gap-4">
-            <Link href="/login" className="hidden sm:block text-sm font-medium text-neutral-700 hover:text-neutral-900">
-              Log in
-            </Link>
-            <Button
-              asChild
-              className="rounded-full bg-gradient-to-r from-rose-500 to-orange-500 hover:from-rose-600 hover:to-orange-600"
-            >
-              <Link href="/signup">Get Started</Link>
-            </Button>
-          </div>
-        </div>
-      </header>
-
-      <main className="flex-1 pt-16">
-        <section className="py-12 bg-gradient-to-r from-rose-50 to-orange-50">
+    <PageLayout>
+      <main className="flex-1">
+        <section className="py-12 bg-gradient-to-r from-rose-50 to-orange-50 dark:from-neutral-900 dark:to-neutral-800">
           <div className="container">
             <div className="max-w-3xl mx-auto text-center">
-              <h1 className="text-4xl font-bold tracking-tight text-neutral-900 mb-4">
+              <h1 className="text-4xl font-bold tracking-tight text-neutral-900 dark:text-white mb-4">
                 Explore Our{" "}
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-500 to-orange-500">
                   Courses
                 </span>
               </h1>
-              <p className="text-neutral-600 text-lg mb-8">
+              <p className="text-neutral-600 dark:text-neutral-400 text-lg mb-8">
                 Browse through our extensive collection of courses across various categories.
               </p>
               <div className="relative max-w-xl mx-auto">
@@ -110,17 +75,17 @@ export default function CoursesPage() {
           <div className="container">
             <div className="flex flex-col lg:flex-row gap-8">
               <div className="w-full lg:w-64 shrink-0">
-                <div className="sticky top-24 bg-white p-6 rounded-xl border shadow-sm">
+                <div className="sticky top-24 bg-white dark:bg-neutral-900 p-6 rounded-xl border dark:border-neutral-800 shadow-sm">
                   <div className="flex items-center justify-between mb-6">
-                    <h2 className="text-lg font-bold">Filters</h2>
-                    <Button variant="ghost" size="sm" className="text-rose-600">
+                    <h2 className="text-lg font-bold text-foreground">Filters</h2>
+                    <Button variant="ghost" size="sm" className="text-rose-600 hover:text-rose-700">
                       Reset
                     </Button>
                   </div>
 
                   <div className="space-y-6">
                     <div>
-                      <h3 className="font-medium mb-3">Categories</h3>
+                      <h3 className="font-medium mb-3 text-foreground">Categories</h3>
                       <div className="space-y-2">
                         {[
                           "All Categories",
@@ -135,10 +100,10 @@ export default function CoursesPage() {
                             <input
                               type="checkbox"
                               id={category}
-                              className="h-4 w-4 rounded border-neutral-300 text-rose-600 focus:ring-rose-600"
+                              className="h-4 w-4 rounded border-neutral-300 dark:border-neutral-700 text-rose-600 focus:ring-rose-600 dark:bg-neutral-800 dark:focus:ring-offset-neutral-900"
                               defaultChecked={category === "All Categories"}
                             />
-                            <label htmlFor={category} className="ml-2 text-sm text-neutral-600">
+                            <label htmlFor={category} className="ml-2 text-sm text-neutral-600 dark:text-neutral-400">
                               {category}
                             </label>
                           </div>
@@ -147,47 +112,31 @@ export default function CoursesPage() {
                     </div>
 
                     <div>
-                      <h3 className="font-medium mb-3">Price Range</h3>
+                      <h3 className="font-medium mb-3 text-foreground">Price Range</h3>
                       <Slider defaultValue={[0, 100]} max={200} step={1} className="py-4" />
                       <div className="flex items-center justify-between">
-                        <span className="text-sm font-medium">$0</span>
-                        <span className="text-sm font-medium">$200</span>
+                        <span className="text-sm font-medium text-foreground">$0</span>
+                        <span className="text-sm font-medium text-foreground">$200</span>
                       </div>
                     </div>
 
                     <div>
-                      <h3 className="font-medium mb-3">Rating</h3>
+                      <h3 className="font-medium mb-3 text-foreground">Rating</h3>
                       <div className="space-y-2">
                         {[4.5, 4.0, 3.5, 3.0].map((rating) => (
                           <div key={rating} className="flex items-center">
                             <input
                               type="checkbox"
                               id={`rating-${rating}`}
-                              className="h-4 w-4 rounded border-neutral-300 text-rose-600 focus:ring-rose-600"
+                              className="h-4 w-4 rounded border-neutral-300 dark:border-neutral-700 text-rose-600 focus:ring-rose-600 dark:bg-neutral-800 dark:focus:ring-offset-neutral-900"
                             />
                             <label
                               htmlFor={`rating-${rating}`}
-                              className="ml-2 text-sm text-neutral-600 flex items-center"
+                              className="ml-2 text-sm text-neutral-600 dark:text-neutral-400 flex items-center"
                             >
                               {rating}+
                               <div className="flex ml-1">
-                                {Array(5)
-                                  .fill(null)
-                                  .map((_, i) => (
-                                    <svg
-                                      key={i}
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      viewBox="0 0 24 24"
-                                      fill="currentColor"
-                                      className={`w-3 h-3 ${i < Math.floor(rating) ? "text-amber-400" : "text-neutral-300"}`}
-                                    >
-                                      <path
-                                        fillRule="evenodd"
-                                        d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z"
-                                        clipRule="evenodd"
-                                      />
-                                    </svg>
-                                  ))}
+                                {/* Removed inline star SVG - Use lucide-react Star if needed, although this specific style isn't easily replicated without more complex logic */}
                               </div>
                             </label>
                           </div>
@@ -196,16 +145,16 @@ export default function CoursesPage() {
                     </div>
 
                     <div>
-                      <h3 className="font-medium mb-3">Level</h3>
+                      <h3 className="font-medium mb-3 text-foreground">Level</h3>
                       <div className="space-y-2">
                         {["Beginner", "Intermediate", "Advanced", "All Levels"].map((level) => (
                           <div key={level} className="flex items-center">
                             <input
                               type="checkbox"
                               id={level}
-                              className="h-4 w-4 rounded border-neutral-300 text-rose-600 focus:ring-rose-600"
+                              className="h-4 w-4 rounded border-neutral-300 dark:border-neutral-700 text-rose-600 focus:ring-rose-600 dark:bg-neutral-800 dark:focus:ring-offset-neutral-900"
                             />
-                            <label htmlFor={level} className="ml-2 text-sm text-neutral-600">
+                            <label htmlFor={level} className="ml-2 text-sm text-neutral-600 dark:text-neutral-400">
                               {level}
                             </label>
                           </div>
@@ -223,18 +172,18 @@ export default function CoursesPage() {
               <div className="flex-1">
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
                   <div>
-                    <h2 className="text-2xl font-bold tracking-tight text-neutral-900">All Courses</h2>
-                    <p className="text-neutral-500">Showing {COURSES.length} results</p>
+                    <h2 className="text-2xl font-bold tracking-tight text-neutral-900 dark:text-white">All Courses</h2>
+                    <p className="text-neutral-500 dark:text-neutral-400">Showing {COURSES.length} results</p>
                   </div>
 
                   <div className="flex flex-col sm:flex-row gap-4">
                     <div className="flex items-center">
                       <Tabs defaultValue="grid" className="w-full">
-                        <TabsList className="bg-neutral-100">
-                          <TabsTrigger value="grid" className="data-[state=active]:bg-white">
+                        <TabsList className="bg-neutral-100 dark:bg-neutral-800">
+                          <TabsTrigger value="grid" className="data-[state=active]:bg-white dark:data-[state=active]:bg-neutral-900">
                             <LayoutGrid className="h-4 w-4" />
                           </TabsTrigger>
-                          <TabsTrigger value="list" className="data-[state=active]:bg-white">
+                          <TabsTrigger value="list" className="data-[state=active]:bg-white dark:data-[state=active]:bg-neutral-900">
                             <List className="h-4 w-4" />
                           </TabsTrigger>
                         </TabsList>
@@ -264,66 +213,7 @@ export default function CoursesPage() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                   {COURSES.map((course) => (
-                    <div key={course.id}>
-                      <div className="group h-full overflow-hidden rounded-xl border bg-white shadow-sm hover:shadow-md transition-shadow">
-                        <div className="relative aspect-video overflow-hidden">
-                          <img
-                            src={course.image || "/placeholder.svg"}
-                            alt={course.title}
-                            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                          />
-                          {course.bestseller && (
-                            <div className="absolute top-3 left-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-xs font-bold px-2 py-1 rounded">
-                              Bestseller
-                            </div>
-                          )}
-                        </div>
-                        <div className="p-5">
-                          <div className="flex items-center justify-between mb-2">
-                            <div className="text-sm font-medium text-neutral-500">{course.category}</div>
-                            <div className="flex items-center">
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 24 24"
-                                fill="currentColor"
-                                className="w-4 h-4 text-amber-400"
-                              >
-                                <path
-                                  fillRule="evenodd"
-                                  d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z"
-                                  clipRule="evenodd"
-                                />
-                              </svg>
-                              <span className="text-sm font-medium ml-1">{course.rating}</span>
-                            </div>
-                          </div>
-
-                          <h3 className="font-bold text-lg mb-2 line-clamp-2">
-                            <Link href={`/courses/${course.id}`} className="hover:text-rose-600 transition-colors">
-                              {course.title}
-                            </Link>
-                          </h3>
-
-                          <p className="text-neutral-500 text-sm mb-4">By {course.instructor}</p>
-
-                          <div className="flex items-center gap-4 text-xs text-neutral-600 mb-4">
-                            <div>{course.hours} hours</div>
-                            <div>{course.level}</div>
-                            <div>{course.students.toLocaleString()} students</div>
-                          </div>
-
-                          <div className="flex items-center justify-between">
-                            <div className="font-bold text-lg">${course.price}</div>
-                            <Button
-                              size="sm"
-                              className="rounded-full bg-gradient-to-r from-rose-500 to-orange-500 hover:from-rose-600 hover:to-orange-600"
-                            >
-                              Enroll Now
-                            </Button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                    <CourseCard key={course.id} course={course} />
                   ))}
                 </div>
 
@@ -348,7 +238,7 @@ export default function CoursesPage() {
                         variant={page === 1 ? "default" : "outline"}
                         className={`w-10 h-10 rounded-full ${
                           page === 1
-                            ? "bg-gradient-to-r from-rose-500 to-orange-500 hover:from-rose-600 hover:to-orange-600"
+                            ? "bg-gradient-to-r from-rose-500 to-orange-500 hover:from-rose-600 hover:to-orange-600 text-white"
                             : ""
                         }`}
                       >
@@ -375,28 +265,6 @@ export default function CoursesPage() {
           </div>
         </section>
       </main>
-
-      <footer className="bg-neutral-900 text-neutral-300 pt-16 pb-8">
-        <div className="container">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-12">
-            <div className="lg:col-span-2">
-              <Link href="/" className="flex items-center gap-2 mb-6">
-                <div className="relative flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-rose-500 via-fuchsia-500 to-orange-500">
-                  <span className="font-bold text-white text-xl">D</span>
-                </div>
-                <span className="font-bold text-xl text-white">DablieLearn</span>
-              </Link>
-              <p className="text-neutral-400 max-w-md mb-6">
-                DablieLearn is an e-learning platform that helps you acquire new skills and knowledge through
-                high-quality courses taught by industry experts.
-              </p>
-              <div className="flex space-x-4">{/* Social icons - similar to the footer component */}</div>
-            </div>
-
-            {/* Other footer sections - similar to the footer component */}
-          </div>
-        </div>
-      </footer>
-    </div>
+    </PageLayout>
   )
 }

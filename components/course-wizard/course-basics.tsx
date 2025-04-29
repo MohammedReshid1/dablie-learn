@@ -73,28 +73,33 @@ const languages = [
   { value: "Russian", label: "Russian" },
 ]
 
-export default function CourseBasics({ data, updateData }) {
-  const form = useForm({
+// Define prop types
+interface CourseBasicsProps {
+  formData: Record<string, any>; // Use a more specific type if available
+  updateFormData: (data: Partial<Record<string, any>>) => void;
+}
+
+// Apply prop types and rename props
+export function CourseBasics({ formData, updateFormData }: CourseBasicsProps) {
+  const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: data.title || "",
-      subtitle: data.subtitle || "",
-      description: data.description || "",
-      category: data.category || "",
-      level: data.level || "",
-      language: data.language || "English",
+      title: formData.title || "",
+      subtitle: formData.subtitle || "",
+      description: formData.description || "",
+      category: formData.category || "",
+      level: formData.level || "",
+      language: formData.language || "English",
     },
   })
 
   // Update parent component when form values change
-  const formValues = form.watch()
-
   useEffect(() => {
     const subscription = form.watch((value) => {
-      updateData(value)
+      updateFormData(value) // Use the passed updateFormData prop
     })
     return () => subscription.unsubscribe()
-  }, [form, updateData])
+  }, [form.watch, updateFormData]) // Update dependency array
 
   return (
     <Form {...form}>

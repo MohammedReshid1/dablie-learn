@@ -2,11 +2,19 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Checkbox } from "@/components/ui/checkbox"
-import { Facebook, Github } from "lucide-react"
+import { Facebook, Github, ChevronLeft } from "lucide-react"
 
 export default function LoginPage() {
   return (
     <div className="min-h-screen flex flex-col">
+      <div className="absolute top-4 left-4 z-10">
+        <Button variant="ghost" size="icon" asChild>
+          <Link href="/" aria-label="Back to Home">
+            <ChevronLeft className="h-6 w-6" />
+          </Link>
+        </Button>
+      </div>
+
       <div className="flex-1 flex items-center justify-center p-4">
         <div className="w-full max-w-md">
           <div className="text-center mb-8">
@@ -17,7 +25,7 @@ export default function LoginPage() {
               <span className="font-bold text-2xl">DablieLearn</span>
             </Link>
             <h1 className="text-2xl font-bold tracking-tight">Welcome back</h1>
-            <p className="text-neutral-500 mt-2">Sign in to your account to continue learning</p>
+            <p className="text-neutral-500 dark:text-neutral-400 mt-2">Sign in to your account to continue learning</p>
           </div>
 
           <div className="space-y-4">
@@ -34,7 +42,7 @@ export default function LoginPage() {
 
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t" />
+                <span className="w-full border-t dark:border-neutral-700" />
               </div>
               <div className="relative flex justify-center text-xs uppercase">
                 <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
@@ -93,7 +101,7 @@ export default function LoginPage() {
 
               <div className="relative my-6">
                 <div className="absolute inset-0 flex items-center">
-                  <span className="w-full border-t" />
+                  <span className="w-full border-t dark:border-neutral-700" />
                 </div>
                 <div className="relative flex justify-center text-xs uppercase">
                   <span className="bg-background px-2 text-muted-foreground">Or try demo accounts</span>
@@ -120,17 +128,17 @@ export default function LoginPage() {
         </div>
       </div>
 
-      <footer className="py-6 border-t">
+      <footer className="py-6 border-t dark:border-neutral-800">
         <div className="container flex flex-col md:flex-row justify-between items-center gap-4">
-          <div className="text-neutral-500 text-sm">© {new Date().getFullYear()} DablieLearn. All rights reserved.</div>
+          <div className="text-neutral-500 dark:text-neutral-400 text-sm">© {new Date().getFullYear()} DablieLearn. All rights reserved.</div>
           <div className="flex gap-6">
-            <Link href="/terms" className="text-sm text-neutral-500 hover:text-neutral-900 transition-colors">
+            <Link href="/terms" className="text-sm text-neutral-500 hover:text-foreground dark:text-neutral-400 transition-colors">
               Terms
             </Link>
-            <Link href="/privacy" className="text-sm text-neutral-500 hover:text-neutral-900 transition-colors">
+            <Link href="/privacy" className="text-sm text-neutral-500 hover:text-foreground dark:text-neutral-400 transition-colors">
               Privacy
             </Link>
-            <Link href="/help" className="text-sm text-neutral-500 hover:text-neutral-900 transition-colors">
+            <Link href="/help" className="text-sm text-neutral-500 hover:text-foreground dark:text-neutral-400 transition-colors">
               Help
             </Link>
           </div>

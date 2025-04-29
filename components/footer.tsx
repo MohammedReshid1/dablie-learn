@@ -1,6 +1,5 @@
 import Link from "next/link"
 import { FacebookIcon, InstagramIcon, LinkedinIcon, TwitterIcon, YoutubeIcon } from "lucide-react"
-import { ThemeToggle } from "@/components/theme-toggle"
 
 export function Footer() {
   return (
@@ -49,10 +48,6 @@ export function Footer() {
               >
                 <YoutubeIcon className="h-5 w-5" />
               </Link>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-sm">Theme:</span>
-              <ThemeToggle />
             </div>
           </div>
 
@@ -161,7 +156,6 @@ export function Footer() {
             <Link href="/cookies" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
               Cookies
             </Link>
-            <ThemeToggle />
           </div>
         </div>
       </div>

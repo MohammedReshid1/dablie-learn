@@ -22,8 +22,15 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 
-export default function CourseCurriculum({ data, updateData }) {
-  const [sections, setSections] = useState(data?.sections || [])
+// Define prop types
+interface CourseCurriculumProps {
+  formData: { sections?: any[] }; // Use a more specific type for sections if available
+  updateFormData: (data: Partial<{ sections: any[] }>) => void;
+}
+
+// Apply prop types and rename props
+export function CourseCurriculum({ formData, updateFormData }: CourseCurriculumProps) {
+  const [sections, setSections] = useState(formData?.sections || [])
   const [isAddSectionOpen, setIsAddSectionOpen] = useState(false)
   const [newSection, setNewSection] = useState({ title: "", description: "" })
   const [isAddLessonOpen, setIsAddLessonOpen] = useState(false)
@@ -36,10 +43,9 @@ export default function CourseCurriculum({ data, updateData }) {
   const [editingLessonData, setEditingLessonData] = useState({ sectionIndex: null, lessonIndex: null, lesson: null })
 
   useEffect(() => {
-    if (updateData) {
-      updateData({ sections })
-    }
-  }, [sections, updateData])
+    // updateData is called when sections state changes
+    updateFormData({ sections })
+  }, [sections, updateFormData]) // Update dependency array
 
   const handleAddSection = () => {
     if (newSection.title.trim() === "") return
@@ -285,7 +291,7 @@ export default function CourseCurriculum({ data, updateData }) {
           {(provided) => (
             <div {...provided.droppableProps} ref={provided.innerRef} className="space-y-4">
               {sections.length === 0 ? (
-                <Card className="border-dashed">
+                <Card className="border-dashed border-border bg-card">
                   <CardContent className="flex flex-col items-center justify-center py-8">
                     <p className="text-muted-foreground text-center mb-4">
                       Your course curriculum is empty. Add sections and lessons to get started.
@@ -304,7 +310,7 @@ export default function CourseCurriculum({ data, updateData }) {
                     index={sectionIndex}
                   >
                     {(provided) => (
-                      <Card ref={provided.innerRef} {...provided.draggableProps} className="border">
+                      <Card ref={provided.innerRef} {...provided.draggableProps} className="border border-border bg-card">
                         <CardHeader className="p-4">
                           <div className="flex items-center">
                             <div {...provided.dragHandleProps} className="mr-2 cursor-grab active:cursor-grabbing">
@@ -430,7 +436,7 @@ export default function CourseCurriculum({ data, updateData }) {
                                 </div>
                               </div>
                               <CollapsibleContent>
-                                <div className="mt-4">
+                                <div className="mt-4 border-t border-border pt-4 px-4 pb-4">
                                   <Droppable droppableId={`lessons-${sectionIndex}`} type="lesson">
                                     {(provided) => (
                                       <div {...provided.droppableProps} ref={provided.innerRef} className="space-y-2">
@@ -450,7 +456,7 @@ export default function CourseCurriculum({ data, updateData }) {
                                                   ref={provided.innerRef}
                                                   {...provided.draggableProps}
                                                   {...provided.dragHandleProps}
-                                                  className="flex items-center justify-between rounded-md border bg-background p-3"
+                                                  className="flex items-center justify-between rounded-md border border-border bg-background p-3"
                                                 >
                                                   <div className="flex items-center gap-3">
                                                     <Grip className="h-4 w-4 text-muted-foreground" />
