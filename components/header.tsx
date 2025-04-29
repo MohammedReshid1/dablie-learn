@@ -6,11 +6,25 @@ import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { Menu, X, ChevronLeft, Home } from "lucide-react"
+import { cn } from "@/lib/utils"
 
-export function Header() {
+interface HeaderProps {
+  activeLink?: "Explore" | "Categories" | "Teach" | "About Us" | "None"
+}
+
+export function Header({ activeLink = "None" }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const pathname = usePathname()
   const isHomePage = pathname === "/"
+
+  const getLinkClasses = (linkName: HeaderProps["activeLink"]) => {
+    return cn(
+      "text-sm font-medium transition-colors",
+      activeLink === linkName
+        ? "text-primary"
+        : "text-foreground/80 hover:text-foreground"
+    )
+  }
 
   return (
     <header className="sticky top-0 w-full z-50 backdrop-blur-md bg-background/80 border-b border-border transition-colors duration-300">
@@ -18,7 +32,7 @@ export function Header() {
         <div className="flex items-center gap-2">
           {!isHomePage && (
             <Button variant="ghost" size="icon" className="mr-2" asChild aria-label="Back to previous page">
-              <Link href="javascript:history.back()">
+              <Link href="#" onClick={() => window.history.back()}>
                 <ChevronLeft className="h-5 w-5" />
               </Link>
             </Button>
@@ -27,34 +41,21 @@ export function Header() {
             <div className="relative flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-rose-500 via-fuchsia-500 to-orange-500">
               <span className="font-bold text-white text-xl">D</span>
             </div>
-            <span className="font-bold text-xl">DablieLearn</span>
+            <span className="font-bold text-xl text-foreground">DablieLearn</span>
           </Link>
         </div>
 
-        {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-6">
-          <Link
-            href="/courses"
-            className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors"
-          >
+          <Link href="/courses" className={getLinkClasses("Explore")}>
             Explore
           </Link>
-          <Link
-            href="/categories"
-            className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors"
-          >
+          <Link href="/categories" className={getLinkClasses("Categories")}>
             Categories
           </Link>
-          <Link
-            href="/teach"
-            className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors"
-          >
+          <Link href="/teach" className={getLinkClasses("Teach")}>
             Teach
           </Link>
-          <Link
-            href="/about-us"
-            className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors"
-          >
+          <Link href="/about" className={getLinkClasses("About Us")}>
             About Us
           </Link>
         </nav>
@@ -85,41 +86,43 @@ export function Header() {
         </div>
       </div>
 
-      {/* Mobile Navigation */}
       {isMenuOpen && (
         <div className="md:hidden border-t border-border">
           <nav className="container py-4 flex flex-col gap-4">
             <Link
               href="/"
-              className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors flex items-center gap-2"
+              className={cn(
+                "text-sm font-medium transition-colors flex items-center gap-2",
+                activeLink === "None" ? "text-primary" : "text-foreground/80 hover:text-foreground"
+               )}
               onClick={() => setIsMenuOpen(false)}
             >
               <Home className="h-4 w-4" /> Home
             </Link>
             <Link
               href="/courses"
-              className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors"
+              className={getLinkClasses("Explore")}
               onClick={() => setIsMenuOpen(false)}
             >
               Explore
             </Link>
             <Link
               href="/categories"
-              className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors"
+              className={getLinkClasses("Categories")}
               onClick={() => setIsMenuOpen(false)}
             >
               Categories
             </Link>
             <Link
               href="/teach"
-              className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors"
+              className={getLinkClasses("Teach")}
               onClick={() => setIsMenuOpen(false)}
             >
               Teach
             </Link>
             <Link
-              href="/about-us"
-              className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors"
+              href="/about"
+              className={getLinkClasses("About Us")}
               onClick={() => setIsMenuOpen(false)}
             >
               About Us

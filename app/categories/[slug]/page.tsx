@@ -2,17 +2,26 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Search, Star, Users, Clock } from "lucide-react"
-import { use } from "react"
+import { Search, Star, Users, Clock, Filter } from "lucide-react"
+import { use, useState } from "react"
 import { Badge } from "@/components/ui/badge"
-import { MainHeader } from "@/components/layout/main-header"
+import { Header } from "@/components/header"
+import { getCategoryColorClasses } from "@/lib/category-colors"
+import { cn } from "@/lib/utils"
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from "vaul"
 
 export default function CategoryPage({ params }: { params: Promise<{ slug: string }> }) {
   // Unwrap params using React.use()
   const resolvedParams = use(params)
+  const categorySlug = resolvedParams.slug
+  // Get category colors
+  const colors = getCategoryColorClasses(categorySlug)
 
   // In a real app, you would fetch courses based on the category slug
-  const categoryName = resolvedParams.slug.charAt(0).toUpperCase() + resolvedParams.slug.slice(1)
+  const categoryName = colors.name // Use name from colors object
+
+  // State for mobile filter drawer
+  const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false)
 
   // Sample course data for this category
   const COURSES = Array(9)
@@ -46,15 +55,23 @@ export default function CategoryPage({ params }: { params: Promise<{ slug: strin
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
-      <MainHeader activeLink="Categories" />
+      <Header activeLink="Categories" />
 
       <main className="flex-1 pt-16">
-        <section className="py-12 bg-gradient-to-r from-primary/10 via-background to-background">
+        <section className={cn(
+          "py-12",
+          // Apply dark mode gradient based on category
+          `bg-gradient-to-r ${colors.gradientFrom}/10 via-background to-background`
+        )}>
           <div className="container">
             <div className="max-w-3xl mx-auto">
               <h1 className="text-4xl font-bold tracking-tight text-foreground mb-4">
                 {categoryName}{" "}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-orange-500">
+                {/* Apply dark mode text gradient */}
+                <span className={cn(
+                  "text-transparent bg-clip-text",
+                  `bg-gradient-to-r ${colors.gradientFrom} ${colors.gradientTo}`
+                )}>
                   Courses
                 </span>
               </h1>
@@ -78,23 +95,30 @@ export default function CategoryPage({ params }: { params: Promise<{ slug: strin
 
         <section className="py-12 bg-background">
           <div className="container">
-            <div className="flex flex-col lg:flex-row gap-8">
-              <div className="w-full lg:w-64 shrink-0">
-                <div className="sticky top-24 bg-card p-6 rounded-xl border border-border shadow-sm">
-                  <div className="flex items-center justify-between mb-6">
-                    <h2 className="text-lg font-bold text-foreground">Filters</h2>
-                    <Button variant="link" size="sm" className="text-primary p-0 h-auto">
-                      Reset
-                    </Button>
-                  </div>
-
-                  <div className="space-y-6">
+            {/* Mobile Filter Button */} 
+            <div className="mb-6 lg:hidden">
+               <Drawer open={isFilterDrawerOpen} onOpenChange={setIsFilterDrawerOpen}>
+                <DrawerTrigger asChild>
+                  <Button variant="outline" className="w-full">
+                    <Filter className="mr-2 h-4 w-4" />
+                    Show Filters
+                  </Button>
+                </DrawerTrigger>
+                <DrawerContent>
+                   <DrawerHeader className="text-left">
+                    <DrawerTitle>Filters</DrawerTitle>
+                    {/* Optional: Add a reset button here too? */}
+                  </DrawerHeader>
+                   {/* Reuse existing filter content structure inside drawer */}
+                  <div className="p-4 space-y-6">
+                    {/* Filters content START */} 
                     <div>
                       <h3 className="font-medium mb-3 text-foreground">Price Range</h3>
                       <div className="flex items-center justify-between">
                         <span className="text-sm font-medium text-muted-foreground">$0</span>
                         <span className="text-sm font-medium text-muted-foreground">$200</span>
                       </div>
+                      {/* TODO: Implement Slider component */}
                     </div>
 
                     <div>
@@ -104,11 +128,11 @@ export default function CategoryPage({ params }: { params: Promise<{ slug: strin
                           <div key={rating} className="flex items-center">
                             <input
                               type="checkbox"
-                              id={`rating-${rating}`}
+                              id={`mobile-rating-${rating}`}
                               className="h-4 w-4 rounded border-border text-primary focus:ring-primary"
                             />
                             <label
-                              htmlFor={`rating-${rating}`}
+                              htmlFor={`mobile-rating-${rating}`}
                               className="ml-2 text-sm text-muted-foreground flex items-center"
                             >
                               {rating}+
@@ -135,20 +159,101 @@ export default function CategoryPage({ params }: { params: Promise<{ slug: strin
                           <div key={level} className="flex items-center">
                             <input
                               type="checkbox"
-                              id={level}
+                              id={`mobile-${level}`}
                               className="h-4 w-4 rounded border-border text-primary focus:ring-primary"
                             />
-                            <label htmlFor={level} className="ml-2 text-sm text-muted-foreground">
+                            <label htmlFor={`mobile-${level}`} className="ml-2 text-sm text-muted-foreground">
                               {level}
                             </label>
                           </div>
                         ))}
                       </div>
                     </div>
+                     {/* TODO: Make filter application close the drawer */}
+                    <Button className="w-full" onClick={() => setIsFilterDrawerOpen(false)}>
+                      Apply Filters
+                    </Button>
+                     {/* Filters content END */} 
+                  </div>
+                </DrawerContent>
+              </Drawer>
+            </div>
 
+            <div className="flex flex-col lg:flex-row gap-8">
+              {/* Filters Section (Desktop) - Hide on mobile */}
+              <div className="w-full lg:w-64 shrink-0 hidden lg:block">
+                 {/* Filters content duplicated here for desktop */}
+                <div className="sticky top-24 bg-card p-6 rounded-xl border border-border shadow-sm">
+                  <div className="flex items-center justify-between mb-6">
+                    <h2 className="text-lg font-bold text-foreground">Filters</h2>
+                    <Button variant="link" size="sm" className="text-primary p-0 h-auto">
+                      Reset
+                    </Button>
+                  </div>
+
+                  <div className="space-y-6">
+                     {/* Filters content START */} 
+                    <div>
+                      <h3 className="font-medium mb-3 text-foreground">Price Range</h3>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium text-muted-foreground">$0</span>
+                        <span className="text-sm font-medium text-muted-foreground">$200</span>
+                      </div>
+                      {/* TODO: Implement Slider component */}
+                    </div>
+
+                    <div>
+                      <h3 className="font-medium mb-3 text-foreground">Rating</h3>
+                      <div className="space-y-2">
+                        {[4.5, 4.0, 3.5, 3.0].map((rating) => (
+                          <div key={rating} className="flex items-center">
+                            <input
+                              type="checkbox"
+                              id={`desktop-rating-${rating}`}
+                              className="h-4 w-4 rounded border-border text-primary focus:ring-primary"
+                            />
+                            <label
+                              htmlFor={`desktop-rating-${rating}`}
+                              className="ml-2 text-sm text-muted-foreground flex items-center"
+                            >
+                              {rating}+
+                              <div className="flex ml-1">
+                                {Array(5)
+                                  .fill(null)
+                                  .map((_, i) => (
+                                    <Star
+                                      key={i}
+                                      className={`w-3 h-3 ${i < Math.floor(rating) ? "text-amber-400 fill-amber-400" : "text-muted-foreground/50"}`}
+                                    />
+                                  ))}
+                              </div>
+                            </label>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div>
+                      <h3 className="font-medium mb-3 text-foreground">Level</h3>
+                      <div className="space-y-2">
+                        {["Beginner", "Intermediate", "Advanced", "All Levels"].map((level) => (
+                          <div key={level} className="flex items-center">
+                            <input
+                              type="checkbox"
+                              id={`desktop-${level}`}
+                              className="h-4 w-4 rounded border-border text-primary focus:ring-primary"
+                            />
+                            <label htmlFor={`desktop-${level}`} className="ml-2 text-sm text-muted-foreground">
+                              {level}
+                            </label>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                     <Button className="w-full">
                       Apply Filters
                     </Button>
+                     {/* Filters content END */} 
                   </div>
                 </div>
               </div>
