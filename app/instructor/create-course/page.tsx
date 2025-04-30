@@ -166,7 +166,7 @@ export default function CreateCoursePage() {
               </TabsContent>
 
               <TabsContent value="settings" className="space-y-6 mt-0">
-                <CourseSettings data={courseData.settings} updateData={(data: any) => updateCourseData("settings", data)} />
+                <CourseSettings formData={courseData.settings} updateFormData={(data: any) => updateCourseData("settings", data)} />
               </TabsContent>
             </Tabs>
 
