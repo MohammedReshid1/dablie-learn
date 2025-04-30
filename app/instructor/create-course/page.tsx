@@ -9,10 +9,10 @@ import { InstructorShell } from "@/components/instructor-shell"
 import { ArrowLeft, ArrowRight, Check, Save } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 import { useMediaQuery } from "@/hooks/use-media-query"
-import CourseBasics from "@/components/course-wizard/course-basics"
-import CourseCurriculum from "@/components/course-wizard/course-curriculum"
+import { CourseBasics } from "@/components/course-wizard/course-basics"
+import { CourseCurriculum } from "@/components/course-wizard/course-curriculum"
 import CourseAssessments from "@/components/course-wizard/course-assessments"
-import CourseMedia from "@/components/course-wizard/course-media"
+import { CourseMedia } from "@/components/course-wizard/course-media"
 import CourseSettings from "@/components/course-wizard/course-settings"
 
 const steps = [
@@ -37,11 +37,11 @@ export default function CreateCoursePage() {
     category: "",
     level: "",
     price: 0,
-    curriculum: [],
-    assessments: [],
+    curriculum: { sections: [] },
+    assessments: { quizzes: [], assignments: [] },
     media: {
-      thumbnail: "",
-      previewVideo: "",
+      thumbnail: null,
+      previewVideo: null,
     },
     settings: {
       isPublished: false,
@@ -79,7 +79,6 @@ export default function CreateCoursePage() {
     toast({
       title: "Course published",
       description: "Your course has been published successfully!",
-      variant: "success",
     })
   }
 
@@ -145,29 +144,29 @@ export default function CreateCoursePage() {
               )}
 
               <TabsContent value="basics" className="space-y-6 mt-0">
-                <CourseBasics data={courseData} onChange={(data) => updateCourseData("basics", data)} />
+                <CourseBasics formData={courseData} updateFormData={(data) => updateCourseData("basics", data)} />
               </TabsContent>
 
               <TabsContent value="curriculum" className="space-y-6 mt-0">
                 <CourseCurriculum
-                  data={courseData.curriculum}
-                  onChange={(data) => updateCourseData("curriculum", data)}
+                  formData={courseData.curriculum}
+                  updateFormData={(data) => updateCourseData("curriculum", data)}
                 />
               </TabsContent>
 
               <TabsContent value="assessments" className="space-y-6 mt-0">
                 <CourseAssessments
-                  data={courseData.assessments}
-                  onChange={(data) => updateCourseData("assessments", data)}
+                  formData={courseData.assessments}
+                  updateFormData={(data) => updateCourseData("assessments", data)}
                 />
               </TabsContent>
 
               <TabsContent value="media" className="space-y-6 mt-0">
-                <CourseMedia data={courseData.media} onChange={(data) => updateCourseData("media", data)} />
+                <CourseMedia formData={courseData.media} updateFormData={(data) => updateCourseData("media", data)} />
               </TabsContent>
 
               <TabsContent value="settings" className="space-y-6 mt-0">
-                <CourseSettings data={courseData.settings} onChange={(data) => updateCourseData("settings", data)} />
+                <CourseSettings data={courseData.settings} updateData={(data: any) => updateCourseData("settings", data)} />
               </TabsContent>
             </Tabs>
 
