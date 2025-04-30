@@ -54,7 +54,7 @@ export function HowItWorks() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="flex flex-col items-center text-center"
+              className="relative flex flex-col items-center text-center"
             >
               <div className={`flex items-center justify-center w-20 h-20 rounded-full ${step.color} mb-6 shadow-lg`}>
                 <step.icon className="h-10 w-10 text-white" />
