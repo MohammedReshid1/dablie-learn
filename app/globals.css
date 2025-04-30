@@ -53,6 +53,10 @@
   * {
     @apply border-border;
   }
+  html {
+    /* Add smooth scrolling */
+    scroll-behavior: smooth;
+  }
   body {
     @apply bg-background text-foreground;
   }
