@@ -1,6 +1,5 @@
 "use client"
 
-import { useEffect, useRef } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Search } from "lucide-react"
@@ -8,37 +7,11 @@ import Link from "next/link"
 import { motion } from "framer-motion"
 
 export function LandingHero() {
-  const counterRef = useRef<HTMLSpanElement>(null)
-
-  useEffect(() => {
-    if (!counterRef.current) return
-
-    const target = 10000
-    const duration = 2000
-    const steps = 50
-    const stepTime = duration / steps
-
-    let current = 0
-
-    const updateCounter = () => {
-      current += target / steps
-      if (current > target) current = target
-
-      if (counterRef.current) {
-        counterRef.current.textContent = Math.floor(current).toLocaleString()
-      }
-
-      if (current < target) {
-        setTimeout(updateCounter, stepTime)
-      }
-    }
-
-    // Start the animation after a small delay
-    setTimeout(updateCounter, 500)
-  }, [])
-
   return (
-    <section className="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden bg-gradient-to-b from-background to-secondary/30">
+    <section
+      className="relative pt-4 pb-16 md:pt-8 overflow-hidden bg-gradient-to-b from-background to-secondary/30 min-h-[calc(100vh-theme(space.16))] flex items-center"
+    >
+      {/* Background blur divs */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-[40%] -left-[10%] h-[80%] w-[60%] rounded-full bg-gradient-to-br from-rose-100/30 to-fuchsia-100/30 dark:from-rose-900/10 dark:to-fuchsia-900/10 blur-3xl" />
         <div className="absolute -bottom-[30%] -right-[10%] h-[70%] w-[60%] rounded-full bg-gradient-to-br from-orange-100/30 to-amber-100/30 dark:from-orange-900/10 dark:to-amber-900/10 blur-3xl" />
@@ -55,8 +28,8 @@ export function LandingHero() {
             <div className="inline-flex items-center rounded-full bg-secondary px-4 py-1.5 text-sm font-medium text-secondary-foreground">
               <span className="flex h-2 w-2 rounded-full bg-rose-500 mr-2"></span>
               Over{" "}
-              <span ref={counterRef} className="font-bold mx-1">
-                0
+              <span className="font-bold mx-1">
+                10,000
               </span>{" "}
               students worldwide
             </div>
@@ -103,7 +76,7 @@ export function LandingHero() {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="relative aspect-[4/3] lg:aspect-square lg:order-last order-first mb-12 lg:mb-0"
+            className="relative aspect-[4/3] lg:aspect-[5/4] lg:order-last mb-12 lg:mb-0"
           >
             <div className="absolute top-[10%] left-[10%] h-[80%] w-[80%] rounded-2xl bg-gradient-to-br from-rose-500 via-fuchsia-500 to-orange-500 blur-md opacity-20" />
             <div className="relative h-full w-full rounded-2xl overflow-hidden border-8 border-background shadow-xl">
@@ -163,6 +136,28 @@ export function LandingHero() {
             </div>
           </motion.div>
         </div>
+      </div>
+
+      {/* Downward Arrow */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 cursor-pointer animate-bounce">
+        <a href="#featured-courses"> {/* Link to the next section's ID */}
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-6 w-6 text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <path
+              d="M12 5V19M12 19L19 12M12 19L5 12"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </a>
       </div>
     </section>
   )
