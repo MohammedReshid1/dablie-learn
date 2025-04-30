@@ -8,7 +8,19 @@ import { Switch } from "@/components/ui/switch"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Plus, Trash2, ArrowUpDown, DollarSign } from "lucide-react"
 
-export default function CourseSettings({ data, updateData }) {
+// Define prop types
+interface CourseSettingsProps {
+  data: {
+    requirements?: string[];
+    targetAudience?: string[];
+    learningOutcomes?: string[];
+    price?: string | number; // Allow string for input handling
+    isPublished?: boolean;
+  };
+  updateData: (update: Partial<CourseSettingsProps['data']>) => void;
+}
+
+export default function CourseSettings({ data, updateData }: CourseSettingsProps) {
   const [requirements, setRequirements] = useState(data.requirements || [])
   const [newRequirement, setNewRequirement] = useState("")
 
@@ -30,7 +42,7 @@ export default function CourseSettings({ data, updateData }) {
     updateData({ requirements: updatedRequirements })
   }
 
-  const removeRequirement = (index) => {
+  const removeRequirement = (index: number) => {
     const updatedRequirements = requirements.filter((_, i) => i !== index)
     setRequirements(updatedRequirements)
     updateData({ requirements: updatedRequirements })
@@ -45,7 +57,7 @@ export default function CourseSettings({ data, updateData }) {
     updateData({ targetAudience: updatedTargetAudience })
   }
 
-  const removeTargetAudience = (index) => {
+  const removeTargetAudience = (index: number) => {
     const updatedTargetAudience = targetAudience.filter((_, i) => i !== index)
     setTargetAudience(updatedTargetAudience)
     updateData({ targetAudience: updatedTargetAudience })
@@ -60,13 +72,13 @@ export default function CourseSettings({ data, updateData }) {
     updateData({ learningOutcomes: updatedLearningOutcomes })
   }
 
-  const removeLearningOutcome = (index) => {
+  const removeLearningOutcome = (index: number) => {
     const updatedLearningOutcomes = learningOutcomes.filter((_, i) => i !== index)
     setLearningOutcomes(updatedLearningOutcomes)
     updateData({ learningOutcomes: updatedLearningOutcomes })
   }
 
-  const handlePriceChange = (e) => {
+  const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
     // Allow only numbers and decimal point
     if (value === "" || /^\d+(\.\d{0,2})?$/.test(value)) {
@@ -75,7 +87,7 @@ export default function CourseSettings({ data, updateData }) {
     }
   }
 
-  const handlePublishToggle = (checked) => {
+  const handlePublishToggle = (checked: boolean) => {
     setIsPublished(checked)
     updateData({ isPublished: checked })
   }
