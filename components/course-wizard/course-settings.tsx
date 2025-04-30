@@ -10,28 +10,28 @@ import { Plus, Trash2, ArrowUpDown, DollarSign } from "lucide-react"
 
 // Define prop types
 interface CourseSettingsProps {
-  data: {
+  formData: {
     requirements?: string[];
     targetAudience?: string[];
     learningOutcomes?: string[];
     price?: string | number; // Allow string for input handling
     isPublished?: boolean;
   };
-  updateData: (update: Partial<CourseSettingsProps['data']>) => void;
+  updateFormData: (update: Partial<CourseSettingsProps['formData']>) => void;
 }
 
-export default function CourseSettings({ data, updateData }: CourseSettingsProps) {
-  const [requirements, setRequirements] = useState(data.requirements || [])
+export default function CourseSettings({ formData, updateFormData }: CourseSettingsProps) {
+  const [requirements, setRequirements] = useState(formData.requirements || [])
   const [newRequirement, setNewRequirement] = useState("")
 
-  const [targetAudience, setTargetAudience] = useState(data.targetAudience || [])
+  const [targetAudience, setTargetAudience] = useState(formData.targetAudience || [])
   const [newTargetAudience, setNewTargetAudience] = useState("")
 
-  const [learningOutcomes, setLearningOutcomes] = useState(data.learningOutcomes || [])
+  const [learningOutcomes, setLearningOutcomes] = useState(formData.learningOutcomes || [])
   const [newLearningOutcome, setNewLearningOutcome] = useState("")
 
-  const [price, setPrice] = useState(data.price || "")
-  const [isPublished, setIsPublished] = useState(data.isPublished || false)
+  const [price, setPrice] = useState(formData.price || "")
+  const [isPublished, setIsPublished] = useState(formData.isPublished || false)
 
   const addRequirement = () => {
     if (!newRequirement.trim()) return
@@ -39,13 +39,13 @@ export default function CourseSettings({ data, updateData }: CourseSettingsProps
     const updatedRequirements = [...requirements, newRequirement]
     setRequirements(updatedRequirements)
     setNewRequirement("")
-    updateData({ requirements: updatedRequirements })
+    updateFormData({ requirements: updatedRequirements })
   }
 
   const removeRequirement = (index: number) => {
     const updatedRequirements = requirements.filter((_, i) => i !== index)
     setRequirements(updatedRequirements)
-    updateData({ requirements: updatedRequirements })
+    updateFormData({ requirements: updatedRequirements })
   }
 
   const addTargetAudience = () => {
@@ -54,13 +54,13 @@ export default function CourseSettings({ data, updateData }: CourseSettingsProps
     const updatedTargetAudience = [...targetAudience, newTargetAudience]
     setTargetAudience(updatedTargetAudience)
     setNewTargetAudience("")
-    updateData({ targetAudience: updatedTargetAudience })
+    updateFormData({ targetAudience: updatedTargetAudience })
   }
 
   const removeTargetAudience = (index: number) => {
     const updatedTargetAudience = targetAudience.filter((_, i) => i !== index)
     setTargetAudience(updatedTargetAudience)
-    updateData({ targetAudience: updatedTargetAudience })
+    updateFormData({ targetAudience: updatedTargetAudience })
   }
 
   const addLearningOutcome = () => {
@@ -69,13 +69,13 @@ export default function CourseSettings({ data, updateData }: CourseSettingsProps
     const updatedLearningOutcomes = [...learningOutcomes, newLearningOutcome]
     setLearningOutcomes(updatedLearningOutcomes)
     setNewLearningOutcome("")
-    updateData({ learningOutcomes: updatedLearningOutcomes })
+    updateFormData({ learningOutcomes: updatedLearningOutcomes })
   }
 
   const removeLearningOutcome = (index: number) => {
     const updatedLearningOutcomes = learningOutcomes.filter((_, i) => i !== index)
     setLearningOutcomes(updatedLearningOutcomes)
-    updateData({ learningOutcomes: updatedLearningOutcomes })
+    updateFormData({ learningOutcomes: updatedLearningOutcomes })
   }
 
   const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -83,13 +83,13 @@ export default function CourseSettings({ data, updateData }: CourseSettingsProps
     // Allow only numbers and decimal point
     if (value === "" || /^\d+(\.\d{0,2})?$/.test(value)) {
       setPrice(value)
-      updateData({ price: value })
+      updateFormData({ price: value })
     }
   }
 
   const handlePublishToggle = (checked: boolean) => {
     setIsPublished(checked)
-    updateData({ isPublished: checked })
+    updateFormData({ isPublished: checked })
   }
 
   return (
@@ -259,7 +259,7 @@ export default function CourseSettings({ data, updateData }: CourseSettingsProps
                               newOutcomes[index] = newOutcomes[index - 1]
                               newOutcomes[index - 1] = temp
                               setLearningOutcomes(newOutcomes)
-                              updateData({ learningOutcomes: newOutcomes })
+                              updateFormData({ learningOutcomes: newOutcomes })
                             }
                           }}
                           disabled={index === 0}
