@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd"
+import { DragDropContext, Droppable, Draggable, DropResult } from "@hello-pangea/dnd"
 import { Plus, Grip, ChevronDown, ChevronUp, Video, FileText, Edit, Trash2, Clock } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -22,25 +22,45 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 
+// Define interfaces for curriculum structure
+interface Lesson {
+  id: string
+  title: string
+  type: "video" | "text" | "quiz" | "assignment"
+  content?: string
+  duration?: string
+}
+
+interface Section {
+  title: string
+  description?: string
+  lessons: Lesson[]
+}
+
 // Define prop types
 interface CourseCurriculumProps {
-  formData: { sections?: any[] }; // Use a more specific type for sections if available
-  updateFormData: (data: Partial<{ sections: any[] }>) => void;
+  formData: { sections?: Section[] }; // Use Section[] type
+  updateFormData: (data: Partial<{ sections: Section[] }>) => void;
 }
 
 // Apply prop types and rename props
 export function CourseCurriculum({ formData, updateFormData }: CourseCurriculumProps) {
-  const [sections, setSections] = useState(formData?.sections || [])
+  const [sections, setSections] = useState<Section[]>(formData?.sections || []) // Use Section[] type
   const [isAddSectionOpen, setIsAddSectionOpen] = useState(false)
   const [newSection, setNewSection] = useState({ title: "", description: "" })
   const [isAddLessonOpen, setIsAddLessonOpen] = useState(false)
   const [isEditSectionOpen, setIsEditSectionOpen] = useState(false)
   const [isEditLessonOpen, setIsEditLessonOpen] = useState(false)
-  const [currentSectionIndex, setCurrentSectionIndex] = useState(null)
-  const [newLesson, setNewLesson] = useState({ title: "", type: "video", content: "", duration: "" })
-  const [openSections, setOpenSections] = useState({})
-  const [editingSectionIndex, setEditingSectionIndex] = useState(null)
-  const [editingLessonData, setEditingLessonData] = useState({ sectionIndex: null, lessonIndex: null, lesson: null })
+  const [currentSectionIndex, setCurrentSectionIndex] = useState<number | null>(null) // Add number type
+  const [newLesson, setNewLesson] = useState<Omit<Lesson, 'id'>>({ title: "", type: "video", content: "", duration: "" }) // Use Omit<Lesson, 'id'>
+  const [openSections, setOpenSections] = useState<{ [key: number]: boolean }>({})
+  const [editingSectionIndex, setEditingSectionIndex] = useState<number | null>(null) // Add number type
+  // Type editingLessonData state
+  const [editingLessonData, setEditingLessonData] = useState<{
+    sectionIndex: number | null;
+    lessonIndex: number | null;
+    lesson: Lesson | null;
+  }>({ sectionIndex: null, lessonIndex: null, lesson: null })
 
   useEffect(() => {
     // updateData is called when sections state changes
@@ -103,26 +123,26 @@ export function CourseCurriculum({ formData, updateFormData }: CourseCurriculumP
     setIsEditLessonOpen(false)
   }
 
-  const handleDeleteSection = (index) => {
+  const handleDeleteSection = (index: number) => {
     const updatedSections = [...sections]
     updatedSections.splice(index, 1)
     setSections(updatedSections)
   }
 
-  const handleDeleteLesson = (sectionIndex, lessonIndex) => {
+  const handleDeleteLesson = (sectionIndex: number, lessonIndex: number) => {
     const updatedSections = [...sections]
     updatedSections[sectionIndex].lessons.splice(lessonIndex, 1)
     setSections(updatedSections)
   }
 
-  const toggleSection = (index) => {
+  const toggleSection = (index: number) => {
     setOpenSections({
       ...openSections,
       [index]: !openSections[index],
     })
   }
 
-  const editSection = (index) => {
+  const editSection = (index: number) => {
     setEditingSectionIndex(index)
     setNewSection({
       title: sections[index].title,
@@ -131,7 +151,7 @@ export function CourseCurriculum({ formData, updateFormData }: CourseCurriculumP
     setIsEditSectionOpen(true)
   }
 
-  const editLesson = (sectionIndex, lessonIndex) => {
+  const editLesson = (sectionIndex: number, lessonIndex: number) => {
     setEditingLessonData({
       sectionIndex,
       lessonIndex,
@@ -140,7 +160,7 @@ export function CourseCurriculum({ formData, updateFormData }: CourseCurriculumP
     setIsEditLessonOpen(true)
   }
 
-  const onDragEnd = (result) => {
+  const onDragEnd = (result: DropResult) => {
     const { destination, source, type } = result
 
     // If dropped outside the list or no movement
@@ -199,7 +219,7 @@ export function CourseCurriculum({ formData, updateFormData }: CourseCurriculumP
     setSections(updatedSections)
   }
 
-  const getLessonIcon = (type) => {
+  const getLessonIcon = (type: Lesson['type']) => {
     switch (type) {
       case "video":
         return <Video className="h-4 w-4" />
@@ -215,7 +235,7 @@ export function CourseCurriculum({ formData, updateFormData }: CourseCurriculumP
 
     sections.forEach((section) => {
       if (section.lessons) {
-        section.lessons.forEach((lesson) => {
+        section.lessons.forEach((lesson: Lesson) => {
           if (lesson.duration) {
             const durationMatch = lesson.duration.match(/^(\d+):(\d+)$/)
             if (durationMatch) {
@@ -391,7 +411,7 @@ export function CourseCurriculum({ formData, updateFormData }: CourseCurriculumP
                                           <Label htmlFor="lesson-type">Lesson Type</Label>
                                           <Select
                                             value={newLesson.type}
-                                            onValueChange={(value) => setNewLesson({ ...newLesson, type: value })}
+                                            onValueChange={(value: string) => setNewLesson({ ...newLesson, type: value as Lesson['type'] })}
                                           >
                                             <SelectTrigger id="lesson-type">
                                               <SelectValue placeholder="Select lesson type" />
@@ -445,7 +465,7 @@ export function CourseCurriculum({ formData, updateFormData }: CourseCurriculumP
                                             No lessons in this section yet. Add your first lesson.
                                           </div>
                                         ) : (
-                                          section.lessons.map((lesson, lessonIndex) => (
+                                          section.lessons.map((lesson: Lesson, lessonIndex: number) => (
                                             <Draggable
                                               key={lesson.id || `lesson-${sectionIndex}-${lessonIndex}`}
                                               draggableId={lesson.id || `lesson-${sectionIndex}-${lessonIndex}`}
@@ -570,9 +590,12 @@ export function CourseCurriculum({ formData, updateFormData }: CourseCurriculumP
                   id="edit-lesson-title"
                   value={editingLessonData.lesson.title}
                   onChange={(e) =>
-                    setEditingLessonData({
-                      ...editingLessonData,
-                      lesson: { ...editingLessonData.lesson, title: e.target.value },
+                    setEditingLessonData(prev => {
+                      if (!prev.lesson) return prev;
+                      return { 
+                        ...prev, 
+                        lesson: { ...prev.lesson, title: e.target.value } 
+                      };
                     })
                   }
                 />
@@ -581,10 +604,10 @@ export function CourseCurriculum({ formData, updateFormData }: CourseCurriculumP
                 <Label htmlFor="edit-lesson-type">Lesson Type</Label>
                 <Select
                   value={editingLessonData.lesson.type}
-                  onValueChange={(value) =>
+                  onValueChange={(value: string) =>
                     setEditingLessonData({
                       ...editingLessonData,
-                      lesson: { ...editingLessonData.lesson, type: value },
+                      lesson: { ...editingLessonData.lesson!, type: value as Lesson['type'] },
                     })
                   }
                 >
@@ -606,9 +629,12 @@ export function CourseCurriculum({ formData, updateFormData }: CourseCurriculumP
                     id="edit-lesson-duration"
                     value={editingLessonData.lesson.duration || ""}
                     onChange={(e) =>
-                      setEditingLessonData({
-                        ...editingLessonData,
-                        lesson: { ...editingLessonData.lesson, duration: e.target.value },
+                      setEditingLessonData(prev => {
+                        if (!prev.lesson) return prev;
+                        return { 
+                          ...prev, 
+                          lesson: { ...prev.lesson, duration: e.target.value } 
+                        };
                       })
                     }
                   />
@@ -620,9 +646,12 @@ export function CourseCurriculum({ formData, updateFormData }: CourseCurriculumP
                   id="edit-lesson-content"
                   value={editingLessonData.lesson.content || ""}
                   onChange={(e) =>
-                    setEditingLessonData({
-                      ...editingLessonData,
-                      lesson: { ...editingLessonData.lesson, content: e.target.value },
+                    setEditingLessonData(prev => {
+                      if (!prev.lesson) return prev;
+                      return { 
+                        ...prev, 
+                        lesson: { ...prev.lesson, content: e.target.value } 
+                      };
                     })
                   }
                 />

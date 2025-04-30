@@ -135,6 +135,7 @@ export default function CourseAssessments({ formData, updateFormData }: CourseAs
   }
 
   const updateQuiz = () => {
+    if (currentQuizIndex === null) return
     if (!newQuiz.title) return
 
     const updatedQuizzes = [...quizzes]
@@ -274,6 +275,7 @@ export default function CourseAssessments({ formData, updateFormData }: CourseAs
   }
 
   const updateAssignment = () => {
+    if (currentAssignmentIndex === null) return
     if (!newAssignment.title) return
 
     const updatedAssignments = [...assignments]

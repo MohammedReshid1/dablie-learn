@@ -38,7 +38,7 @@ const formSchema = z.object({
   level: z.string({
     required_error: "Please select a difficulty level.",
   }),
-  language: z.string().default("English"),
+  language: z.string().optional(),
 })
 
 const categories = [
@@ -89,7 +89,7 @@ export function CourseBasics({ formData, updateFormData }: CourseBasicsProps) {
       description: formData.description || "",
       category: formData.category || "",
       level: formData.level || "",
-      language: formData.language || "English",
+      language: typeof formData.language === 'string' && formData.language ? formData.language : "English",
     },
   })
 

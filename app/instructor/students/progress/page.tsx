@@ -10,14 +10,31 @@ import { Button } from "@/components/ui/button"
 import { Users, Search, ArrowUpDown, BarChart3, BookOpen, CheckCircle2, Clock } from "lucide-react"
 import { Progress } from "@/components/ui/progress"
 
+// Define interfaces for mock data
+interface Course {
+  id: number
+  title: string
+}
+
+interface Student {
+  id: number
+  name: string
+  email: string
+  enrolledCourses: number[]
+  progress: { [key: number]: number }
+  quizScores: { [key: number]: number[] }
+  lastActive: string
+  completionRate: number
+}
+
 // Mock data for demonstration
-const courses = [
+const courses: Course[] = [
   { id: 1, title: "Introduction to Web Development" },
   { id: 2, title: "Advanced JavaScript Concepts" },
   { id: 3, title: "UX Design Fundamentals" },
 ]
 
-const students = [
+const students: Student[] = [
   {
     id: 1,
     name: "Alex Johnson",
@@ -105,7 +122,7 @@ export default function InstructorStudentProgress() {
   const [sortOrder, setSortOrder] = useState("asc")
 
   // Format date for display
-  const formatDate = (dateString) => {
+  const formatDate = (dateString: string) => {
     const date = new Date(dateString)
     return new Intl.DateTimeFormat("en-US", {
       month: "short",
@@ -121,20 +138,20 @@ export default function InstructorStudentProgress() {
     const totalStudents = students.length
     const averageCompletionRate = students.reduce((sum, student) => sum + student.completionRate, 0) / totalStudents
 
-    const courseEnrollments = {}
+    const courseEnrollments: { [key: number]: number } = {}
     courses.forEach((course) => {
       courseEnrollments[course.id] = students.filter((student) => student.enrolledCourses.includes(course.id)).length
     })
 
     const averageQuizScore =
-      students.reduce((sum, student) => {
+      students.reduce((sum, student: Student) => {
         let studentAvg = 0
         let quizCount = 0
 
         Object.keys(student.quizScores).forEach((courseId) => {
-          const scores = student.quizScores[courseId]
-          if (scores.length > 0) {
-            studentAvg += scores.reduce((a, b) => a + b, 0)
+          const scores = student.quizScores[Number(courseId)]
+          if (scores && scores.length > 0) {
+            studentAvg += scores.reduce((a: number, b: number) => a + b, 0)
             quizCount += scores.length
           }
         })
@@ -171,7 +188,7 @@ export default function InstructorStudentProgress() {
 
       return true
     })
-    .sort((a, b) => {
+    .sort((a: Student, b: Student) => {
       // Sort by selected field
       let comparison = 0
 
@@ -180,8 +197,8 @@ export default function InstructorStudentProgress() {
           comparison = a.name.localeCompare(b.name)
           break
         case "progress":
-          const aProgress = selectedCourse !== "all" ? a.progress[selectedCourse] || 0 : a.completionRate
-          const bProgress = selectedCourse !== "all" ? b.progress[selectedCourse] || 0 : b.completionRate
+          const aProgress = selectedCourse !== "all" ? a.progress[Number(selectedCourse)] || 0 : a.completionRate
+          const bProgress = selectedCourse !== "all" ? b.progress[Number(selectedCourse)] || 0 : b.completionRate
           comparison = aProgress - bProgress
           break
         case "lastActive":
@@ -195,7 +212,7 @@ export default function InstructorStudentProgress() {
     })
 
   // Toggle sort order
-  const toggleSort = (field) => {
+  const toggleSort = (field: string) => {
     if (sortBy === field) {
       setSortOrder(sortOrder === "asc" ? "desc" : "asc")
     } else {
@@ -205,11 +222,11 @@ export default function InstructorStudentProgress() {
   }
 
   // Get average quiz score for a student in a specific course
-  const getStudentCourseQuizAverage = (student, courseId) => {
+  const getStudentCourseQuizAverage = (student: Student, courseId: number) => {
     const scores = student.quizScores[courseId]
     if (!scores || scores.length === 0) return "No quizzes"
 
-    const avg = scores.reduce((a, b) => a + b, 0) / scores.length
+    const avg = scores.reduce((a: number, b: number) => a + b, 0) / scores.length
     return `${Math.round(avg)}%`
   }
 
@@ -269,7 +286,7 @@ export default function InstructorStudentProgress() {
                   {(() => {
                     const enrollments = stats.courseEnrollments
                     const mostPopularId = Object.keys(enrollments).reduce((a, b) =>
-                      enrollments[a] > enrollments[b] ? a : b,
+                      enrollments[Number(a)] > enrollments[Number(b)] ? a : b,
                     )
                     const course = courses.find((c) => c.id === Number.parseInt(mostPopularId))
                     return course ? course.title : "None"
@@ -291,7 +308,7 @@ export default function InstructorStudentProgress() {
                   placeholder="Search students..."
                   className="pl-8"
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
                 />
               </div>
 
@@ -387,9 +404,9 @@ export default function InstructorStudentProgress() {
                         {selectedCourse !== "all" ? (
                           <div className="space-y-1">
                             <div className="flex items-center justify-between text-sm">
-                              <span>{student.progress[selectedCourse] || 0}%</span>
+                              <span>{student.progress[Number(selectedCourse)] || 0}%</span>
                             </div>
-                            <Progress value={student.progress[selectedCourse] || 0} className="h-2" />
+                            <Progress value={student.progress[Number(selectedCourse)] || 0} className="h-2" />
                           </div>
                         ) : (
                           <div className="space-y-1">
