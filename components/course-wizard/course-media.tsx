@@ -31,8 +31,8 @@ export function CourseMedia({ formData, updateFormData }: CourseMediaProps) {
     updateFormData({ thumbnail, previewVideo })
   }, [thumbnail, previewVideo, updateFormData])
 
-  const handleThumbnailChange = (e) => {
-    const file = e.target.files[0]
+  const handleThumbnailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files ? e.target.files[0] : null
     if (!file) return
 
     // Validate file type
@@ -57,8 +57,8 @@ export function CourseMedia({ formData, updateFormData }: CourseMediaProps) {
     })
   }
 
-  const handleVideoChange = (e) => {
-    const file = e.target.files[0]
+  const handleVideoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files ? e.target.files[0] : null
     if (!file) return
 
     // Validate file type
@@ -93,7 +93,7 @@ export function CourseMedia({ formData, updateFormData }: CourseMediaProps) {
     if (videoInputRef.current) videoInputRef.current.value = ""
   }
 
-  const formatFileSize = (bytes) => {
+  const formatFileSize = (bytes: number) => {
     if (bytes < 1024) return bytes + " bytes"
     else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + " KB"
     else return (bytes / 1048576).toFixed(1) + " MB"
