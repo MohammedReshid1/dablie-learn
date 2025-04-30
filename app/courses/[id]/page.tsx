@@ -135,91 +135,8 @@ export default function CourseDetailPage({ params }: { params: Promise<{ id: str
       <main className="flex-1 pt-16">
         <section className="py-12 bg-gradient-to-b from-muted/30 to-background">
           <div className="container">
-            {/* Debug info to verify changes are being applied */}
-            <div className="bg-red-500 text-white p-2 mb-4 rounded-md">
-              DEBUG: If you can see this red box, the changes are being applied correctly.
-            </div>
-            
-            {/* Mobile-only layout - Image first, then text */}
-            <div className="lg:hidden space-y-8">
-              {/* Image Card - Mobile (with obvious background) */}
-              <div className="bg-blue-200 p-4 rounded-lg">
-                <p className="font-bold mb-2">IMAGE SECTION (Should appear first on mobile)</p>
-                <Card className="overflow-hidden shadow-xl border border-border bg-card">
-                  <div className="aspect-video overflow-hidden relative">
-                    <img
-                      src={course.image || "/placeholder.svg"}
-                      alt={course.title}
-                      className="h-full w-full object-cover"
-                    />
-                    <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-                      <button className="h-20 w-20 rounded-full bg-background/20 flex items-center justify-center backdrop-blur-sm hover:bg-background/30 transition-colors">
-                        <PlayCircle className="h-12 w-12 text-primary-foreground fill-primary-foreground" />
-                      </button>
-                    </div>
-                    <div className="absolute bottom-4 left-4 bg-black/60 text-secondary-foreground text-sm px-3 py-1 rounded-full backdrop-blur-sm">
-                      Preview this course
-                    </div>
-                  </div>
-                  <CardContent className="p-6">
-                    <div className="mb-4">
-                      <div className="flex items-baseline mb-2">
-                        <span className="text-3xl font-bold text-foreground">${course.discountPrice}</span>
-                        <span className="text-lg line-through text-muted-foreground ml-2">${course.price}</span>
-                        <Badge variant="destructive" className="ml-2">83% off</Badge>
-                      </div>
-                      <div className="text-sm text-muted-foreground">
-                        <span className="font-medium text-foreground">Sale ends in 2 days!</span> Full lifetime access
-                      </div>
-                    </div>
-
-                    <div className="space-y-3 mb-6">
-                      <Button className="w-full">
-                        Enroll Now
-                      </Button>
-                      <Button variant="outline" className="w-full">
-                        Try For Free
-                      </Button>
-                    </div>
-
-                    <div className="space-y-4 text-sm">
-                      <div className="text-center font-medium text-foreground">This course includes:</div>
-
-                      <div className="grid gap-3">
-                        <div className="flex items-start">
-                          <Clock className="h-5 w-5 text-muted-foreground mr-3 shrink-0" />
-                          <div className="text-foreground">{course.duration} on-demand video</div>
-                        </div>
-                        <div className="flex items-start">
-                          <Download className="h-5 w-5 text-muted-foreground mr-3 shrink-0" />
-                          <div className="text-foreground">25 downloadable resources</div>
-                        </div>
-                        <div className="flex items-start">
-                          <Globe className="h-5 w-5 text-muted-foreground mr-3 shrink-0" />
-                          <div className="text-foreground">Full lifetime access</div>
-                        </div>
-                        <div className="flex items-start">
-                          <ShieldCheck className="h-5 w-5 text-muted-foreground mr-3 shrink-0" />
-                          <div className="text-foreground">Certificate of completion</div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="mt-6 flex items-center justify-center gap-4">
-                      <Button variant="ghost" size="sm" className="text-muted-foreground">
-                        <Share2 className="h-4 w-4 mr-2" /> Share
-                      </Button>
-                      <Button variant="ghost" size="sm" className="text-muted-foreground">
-                        Gift this course
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-              
-              {/* Text Content - Mobile */}
-              <div className="bg-green-200 p-4 rounded-lg">
-                <p className="font-bold mb-2">TEXT SECTION (Should appear second on mobile)</p>
+            <div className="grid gap-8 lg:grid-cols-2 lg:gap-12">
+              <div className="flex flex-col justify-center max-w-xl mx-auto lg:mx-0">
                 <Badge
                   variant="secondary"
                   className={cn(
@@ -267,64 +184,8 @@ export default function CourseDetailPage({ params }: { params: Promise<{ id: str
                   </div>
                 </div>
               </div>
-            </div>
-            
-            {/* Desktop-only layout - Text on left, Image on right */}
-            <div className="hidden lg:grid lg:grid-cols-2 lg:gap-12">
-              {/* Text Content - Desktop */}
-              <div className="bg-purple-200 p-4 rounded-lg">
-                <p className="font-bold mb-2">TEXT SECTION (Should appear on left on desktop)</p>
-                <Badge
-                  variant="secondary"
-                  className={cn(
-                    "mb-4 self-start",
-                    colors.bg.replace("bg-primary/10", "bg-secondary"),
-                    colors.text.replace("text-primary", "text-secondary-foreground"),
-                    colors.border.replace("border-primary/20", "border-transparent")
-                  )}
-                >
-                  Web Development
-                </Badge>
-                <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground mb-4">{course.title}</h1>
-                <p className="text-xl text-muted-foreground mb-6">{course.subtitle}</p>
 
-                <div className="flex flex-wrap items-center gap-4 mb-6">
-                  <div className="flex items-center">
-                    <Star className="h-5 w-5 fill-amber-400 text-amber-400" />
-                    <span className="ml-1 font-bold text-foreground">{course.rating}</span>
-                    <span className="ml-1 text-muted-foreground">({course.reviewCount.toLocaleString()} reviews)</span>
-                  </div>
-                  <div className="flex items-center">
-                    <Users className="h-5 w-5 text-muted-foreground" />
-                    <span className="ml-1 text-muted-foreground">{course.studentCount.toLocaleString()} students</span>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3 mb-8">
-                  <div className="h-12 w-12 rounded-full overflow-hidden">
-                    <img
-                      src={course.instructor.image || "/placeholder.svg"}
-                      alt={course.instructor.name}
-                      className="h-full w-full object-cover"
-                    />
-                  </div>
-                  <div>
-                    <div className="font-medium text-foreground">
-                      Created by{" "}
-                      <Link href="#instructor" className="text-primary hover:underline">
-                        {course.instructor.name}
-                      </Link>
-                    </div>
-                    <div className="text-sm text-muted-foreground">
-                      Last updated {course.lastUpdated} • {course.language}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Image Card - Desktop */}
-              <div className="bg-yellow-200 p-4 rounded-lg">
-                <p className="font-bold mb-2">IMAGE SECTION (Should appear on right on desktop)</p>
+              <div>
                 <Card className="overflow-hidden shadow-xl border border-border bg-card">
                   <div className="aspect-video overflow-hidden relative">
                     <img

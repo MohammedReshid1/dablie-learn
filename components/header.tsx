@@ -55,7 +55,7 @@ export function Header({ activeLink = "None" }: HeaderProps) {
           <Link href="/teach" className={getLinkClasses("Teach")}>
             Teach
           </Link>
-          <Link href="/about" className={getLinkClasses("About Us")}>
+          <Link href="/about-us" className={getLinkClasses("About Us")}>
             About Us
           </Link>
         </nav>
@@ -121,7 +121,7 @@ export function Header({ activeLink = "None" }: HeaderProps) {
               Teach
             </Link>
             <Link
-              href="/about"
+              href="/about-us"
               className={getLinkClasses("About Us")}
               onClick={() => setIsMenuOpen(false)}
             >
