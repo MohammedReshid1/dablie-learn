@@ -103,7 +103,7 @@ export function FeaturedCourses() {
     activeCategory === "All" ? COURSES : COURSES.filter((course) => course.category === activeCategory)
 
   return (
-    <section className="py-20 bg-background">
+    <section id="featured-courses" className="py-20 bg-background">
       <div className="container">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-12 gap-6">
           <div>
