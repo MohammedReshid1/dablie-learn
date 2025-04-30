@@ -10,41 +10,72 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
 
+// Define types
+interface Option {
+  id: string
+  text: string
+}
+
+interface Question {
+  id: string
+  text: string
+  type: "single" | "multiple"
+  options: Option[]
+  correctAnswer: string[]
+}
+
+interface QuizCompletionData {
+  score: number
+  passed: boolean
+  answers: { [key: string]: string[] }
+}
+
+interface QuizProps {
+  title?: string
+  description?: string
+  questions?: Question[]
+  timeLimit?: number // in seconds, 0 means no time limit
+  passingScore?: number // percentage
+  onComplete?: (data: QuizCompletionData) => void
+}
+
+const defaultQuestions: Question[] = [
+  {
+    id: "q1",
+    text: "What is the capital of France?",
+    type: "single",
+    options: [
+      { id: "a", text: "London" },
+      { id: "b", text: "Berlin" },
+      { id: "c", text: "Paris" },
+      { id: "d", text: "Madrid" },
+    ],
+    correctAnswer: ["c"],
+  },
+  {
+    id: "q2",
+    text: "Which of the following are programming languages? (Select all that apply)",
+    type: "multiple",
+    options: [
+      { id: "a", text: "JavaScript" },
+      { id: "b", text: "HTML" },
+      { id: "c", text: "Python" },
+      { id: "d", text: "CSS" },
+    ],
+    correctAnswer: ["a", "c"],
+  },
+]
+
 export default function Quiz({
   title = "Sample Quiz",
   description = "Test your knowledge with this quiz",
-  questions = [
-    {
-      id: "q1",
-      text: "What is the capital of France?",
-      type: "single",
-      options: [
-        { id: "a", text: "London" },
-        { id: "b", text: "Berlin" },
-        { id: "c", text: "Paris" },
-        { id: "d", text: "Madrid" },
-      ],
-      correctAnswer: ["c"],
-    },
-    {
-      id: "q2",
-      text: "Which of the following are programming languages? (Select all that apply)",
-      type: "multiple",
-      options: [
-        { id: "a", text: "JavaScript" },
-        { id: "b", text: "HTML" },
-        { id: "c", text: "Python" },
-        { id: "d", text: "CSS" },
-      ],
-      correctAnswer: ["a", "c"],
-    },
-  ],
-  timeLimit = 0, // in seconds, 0 means no time limit
-  passingScore = 70, // percentage
+  questions = defaultQuestions,
+  timeLimit = 0,
+  passingScore = 70,
   onComplete = () => {},
-}) {
+}: QuizProps) {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
-  const [answers, setAnswers] = useState({})
+  const [answers, setAnswers] = useState<{ [key: string]: string[] }>({}) // Typed state
   const [quizCompleted, setQuizCompleted] = useState(false)
   const [score, setScore] = useState(0)
   const [timeRemaining, setTimeRemaining] = useState(timeLimit)
@@ -67,14 +98,14 @@ export default function Quiz({
     }
   }, [timeLimit, quizCompleted])
 
-  const handleSingleAnswer = (questionId, optionId) => {
+  const handleSingleAnswer = (questionId: string, optionId: string) => {
     setAnswers({
       ...answers,
       [questionId]: [optionId],
     })
   }
 
-  const handleMultipleAnswer = (questionId, optionId, checked) => {
+  const handleMultipleAnswer = (questionId: string, optionId: string, checked: boolean) => {
     const currentAnswers = answers[questionId] || []
 
     if (checked) {
@@ -85,12 +116,12 @@ export default function Quiz({
     } else {
       setAnswers({
         ...answers,
-        [questionId]: currentAnswers.filter((id) => id !== optionId),
+        [questionId]: currentAnswers.filter((id: string) => id !== optionId), // Typed filter param
       })
     }
   }
 
-  const isAnswered = (questionId) => {
+  const isAnswered = (questionId: string) => { // Typed param
     return answers[questionId] && answers[questionId].length > 0
   }
 
@@ -117,7 +148,7 @@ export default function Quiz({
 
       // Check if arrays have the same elements (order doesn't matter)
       const isCorrect =
-        userAnswer.length === correctAnswer.length && userAnswer.every((answer) => correctAnswer.includes(answer))
+        userAnswer.length === correctAnswer.length && userAnswer.every((answer: string) => correctAnswer.includes(answer)) // Typed every param
 
       if (isCorrect) correctAnswers++
     })
@@ -127,7 +158,7 @@ export default function Quiz({
     setQuizCompleted(true)
 
     if (onComplete) {
-      onComplete({
+      onComplete({ // Now matches QuizCompletionData
         score: calculatedScore,
         passed: calculatedScore >= passingScore,
         answers,
@@ -144,7 +175,7 @@ export default function Quiz({
     setShowResults(false)
   }
 
-  const formatTime = (seconds) => {
+  const formatTime = (seconds: number) => { // Typed param
     const mins = Math.floor(seconds / 60)
     const secs = seconds % 60
     return `${mins}:${secs < 10 ? "0" : ""}${secs}`
@@ -341,7 +372,7 @@ export default function Quiz({
                     <Checkbox
                       id={option.id}
                       checked={(answers[currentQuestion.id] || []).includes(option.id)}
-                      onCheckedChange={(checked) => handleMultipleAnswer(currentQuestion.id, option.id, checked)}
+                      onCheckedChange={(checked) => handleMultipleAnswer(currentQuestion.id, option.id, checked as boolean)} // Cast checked
                     />
                     <Label htmlFor={option.id}>{option.text}</Label>
                   </div>
