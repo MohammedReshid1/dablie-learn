@@ -1,0 +1,43 @@
+# .github/workflows/dummy-commit.yml
+name: Enforce Vercel Commit Email
+
+on:
+  push:
+    branches:
+      - main   # ← Change this to your target branch if needed
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: write   # allow pushes
+
+jobs:
+  enforce-vercel-email:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0    # needed so git log will see all commits
+
+      - name: Get last commit email
+        id: get_email
+        run: |
+          echo "LAST_EMAIL=$(git log -1 --pretty=format:'%ae')" >> $GITHUB_ENV
+
+      - name: Dummy empty commit if needed
+        if: ${{ env.LAST_EMAIL != 'mohammedabdulwasi123@gmail.com' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Committer email was $LAST_EMAIL → creating dummy empty commit as MohammedReshid1"
+          git config user.name "MohammedReshid1"
+          git config user.email "mohammedabdulwasi123@gmail.com"
+          git commit --allow-empty -m "chore: dummy empty commit to trigger Vercel deploy"
+          git push
+
+      - name: Skip if already Vercel email
+        if: ${{ env.LAST_EMAIL == 'mohammedabdulwasi123@gmail.com' }}
+        run: echo "Committer email matches Vercel—no dummy commit needed."
