@@ -12,47 +12,83 @@ export interface AuthUser extends User {
 export const auth = {
   // Sign up with email and password
   async signUp(email: string, password: string, fullName?: string) {
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          full_name: fullName,
+    try {
+      console.log('Auth: Signing up user with email:', email)
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            full_name: fullName,
+          },
         },
-      },
-    })
-    return { data, error }
+      })
+      console.log('Auth: Sign up result:', { data: !!data, error: !!error })
+      return { data, error }
+    } catch (err) {
+      console.error('Auth: Error in signUp:', err)
+      return { data: null, error: err }
+    }
   },
 
   // Sign in with email and password
   async signIn(email: string, password: string) {
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    })
-    return { data, error }
+    try {
+      console.log('Auth: Signing in user with email:', email)
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      })
+      console.log('Auth: Sign in result:', { data: !!data, error: !!error })
+      return { data, error }
+    } catch (err) {
+      console.error('Auth: Error in signIn:', err)
+      return { data: null, error: err }
+    }
   },
 
   // Sign out
   async signOut() {
-    const { error } = await supabase.auth.signOut()
-    return { error }
+    try {
+      console.log('Auth: Signing out user')
+      const { error } = await supabase.auth.signOut()
+      console.log('Auth: Sign out result:', { error: !!error })
+      return { error }
+    } catch (err) {
+      console.error('Auth: Error in signOut:', err)
+      return { error: err }
+    }
   },
 
   // Get current user
   async getCurrentUser() {
-    const { data: { user }, error } = await supabase.auth.getUser()
-    return { user, error }
+    try {
+      console.log('Auth: Getting current user')
+      const { data: { user }, error } = await supabase.auth.getUser()
+      console.log('Auth: Current user result:', { user: !!user, error: !!error })
+      return { user, error }
+    } catch (err) {
+      console.error('Auth: Error in getCurrentUser:', err)
+      return { user: null, error: err }
+    }
   },
 
   // Get user profile
   async getUserProfile(userId: string) {
-    const { data, error } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', userId)
-      .single()
-    return { data, error }
+    try {
+      console.log('Auth: Getting user profile for:', userId)
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .single()
+      
+      console.log('Auth: Profile result:', { data: !!data, error: !!error })
+      return { data, error }
+    } catch (err) {
+      console.error('Auth: Error in getUserProfile:', err)
+      return { data: null, error: err }
+    }
   },
 
   // Update user profile
@@ -61,17 +97,26 @@ export const auth = {
     avatar_url?: string
     role?: string
   }) {
-    const { data, error } = await supabase
-      .from('profiles')
-      .update(updates)
-      .eq('id', userId)
-      .select()
-      .single()
-    return { data, error }
+    try {
+      console.log('Auth: Updating profile for:', userId)
+      const { data, error } = await supabase
+        .from('profiles')
+        .update(updates)
+        .eq('id', userId)
+        .select()
+        .single()
+      
+      console.log('Auth: Update profile result:', { data: !!data, error: !!error })
+      return { data, error }
+    } catch (err) {
+      console.error('Auth: Error in updateProfile:', err)
+      return { data: null, error: err }
+    }
   },
 
   // Listen to auth state changes
   onAuthStateChange(callback: (event: string, session: any) => void) {
+    console.log('Auth: Setting up auth state change listener')
     return supabase.auth.onAuthStateChange(callback)
   },
 }

@@ -29,7 +29,15 @@ export function Header({ activeLink = "None" }: HeaderProps) {
   }
 
   const handleSignOut = async () => {
-    await signOut()
+    try {
+      console.log('Header: Starting sign out process')
+      await signOut()
+      console.log('Header: Sign out completed')
+    } catch (error) {
+      console.error('Header: Error during sign out:', error)
+      // Force redirect even if there's an error
+      window.location.href = '/'
+    }
   }
 
   return (
