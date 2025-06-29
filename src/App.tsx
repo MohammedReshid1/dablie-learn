@@ -1,6 +1,8 @@
 import { Routes, Route } from 'react-router-dom'
 import { ThemeProvider } from './components/theme-provider'
+import { AuthProvider } from './contexts/AuthContext'
 import { Toaster } from './components/ui/toaster'
+import { ProtectedRoute } from './components/ProtectedRoute'
 
 // Pages
 import HomePage from './pages/HomePage'
@@ -36,43 +38,124 @@ import StudentProgressPage from './pages/instructor/StudentProgressPage'
 function App() {
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-      <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
-        <Routes>
-          {/* Public Routes */}
-          <Route path="/" element={<HomePage />} />
-          <Route path="/courses" element={<CoursesPage />} />
-          <Route path="/courses/:id" element={<CourseDetailPage />} />
-          <Route path="/courses/:id/learn" element={<CourseLearnPage />} />
-          <Route path="/categories" element={<CategoriesPage />} />
-          <Route path="/categories/:slug" element={<CategoryDetailPage />} />
-          <Route path="/about-us" element={<AboutUsPage />} />
-          <Route path="/contact-us" element={<ContactUsPage />} />
-          <Route path="/help-center" element={<HelpCenterPage />} />
-          <Route path="/teach" element={<TeachPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignupPage />} />
-          <Route path="/logout" element={<LogoutPage />} />
-          <Route path="/privacy" element={<PrivacyPage />} />
-          <Route path="/terms" element={<TermsPage />} />
-          <Route path="/cookies" element={<CookiesPage />} />
+      <AuthProvider>
+        <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
+          <Routes>
+            {/* Public Routes */}
+            <Route path="/" element={<HomePage />} />
+            <Route path="/courses" element={<CoursesPage />} />
+            <Route path="/courses/:id" element={<CourseDetailPage />} />
+            <Route path="/categories" element={<CategoriesPage />} />
+            <Route path="/categories/:slug" element={<CategoryDetailPage />} />
+            <Route path="/about-us" element={<AboutUsPage />} />
+            <Route path="/contact-us" element={<ContactUsPage />} />
+            <Route path="/help-center" element={<HelpCenterPage />} />
+            <Route path="/teach" element={<TeachPage />} />
+            <Route path="/privacy" element={<PrivacyPage />} />
+            <Route path="/terms" element={<TermsPage />} />
+            <Route path="/cookies" element={<CookiesPage />} />
 
-          {/* Dashboard Routes */}
-          <Route path="/dashboard" element={<DashboardPage />} />
-          <Route path="/dashboard/my-courses" element={<MyCoursesPage />} />
-          <Route path="/dashboard/progress" element={<ProgressPage />} />
+            {/* Auth Routes (redirect if already logged in) */}
+            <Route 
+              path="/login" 
+              element={
+                <ProtectedRoute requireAuth={false}>
+                  <LoginPage />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/signup" 
+              element={
+                <ProtectedRoute requireAuth={false}>
+                  <SignupPage />
+                </ProtectedRoute>
+              } 
+            />
+            <Route path="/logout" element={<LogoutPage />} />
 
-          {/* Instructor Routes */}
-          <Route path="/instructor/dashboard" element={<InstructorDashboardPage />} />
-          <Route path="/instructor/courses" element={<InstructorCoursesPage />} />
-          <Route path="/instructor/courses/new" element={<NewCoursePage />} />
-          <Route path="/instructor/create-course" element={<CreateCoursePage />} />
-          <Route path="/instructor/students/progress" element={<StudentProgressPage />} />
+            {/* Protected Routes */}
+            <Route 
+              path="/courses/:id/learn" 
+              element={
+                <ProtectedRoute>
+                  <CourseLearnPage />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/dashboard" 
+              element={
+                <ProtectedRoute>
+                  <DashboardPage />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/dashboard/my-courses" 
+              element={
+                <ProtectedRoute>
+                  <MyCoursesPage />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/dashboard/progress" 
+              element={
+                <ProtectedRoute>
+                  <ProgressPage />
+                </ProtectedRoute>
+              } 
+            />
 
-          {/* 404 Route */}
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
-        <Toaster />
-      </div>
+            {/* Instructor Routes */}
+            <Route 
+              path="/instructor/dashboard" 
+              element={
+                <ProtectedRoute>
+                  <InstructorDashboardPage />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/instructor/courses" 
+              element={
+                <ProtectedRoute>
+                  <InstructorCoursesPage />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/instructor/courses/new" 
+              element={
+                <ProtectedRoute>
+                  <NewCoursePage />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/instructor/create-course" 
+              element={
+                <ProtectedRoute>
+                  <CreateCoursePage />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/instructor/students/progress" 
+              element={
+                <ProtectedRoute>
+                  <StudentProgressPage />
+                </ProtectedRoute>
+              } 
+            />
+
+            {/* 404 Route */}
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+          <Toaster />
+        </div>
+      </AuthProvider>
     </ThemeProvider>
   )
 }

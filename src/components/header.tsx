@@ -4,8 +4,10 @@ import { useState } from "react"
 import { Link, useLocation } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
-import { Menu, X, ChevronLeft, Home } from "lucide-react"
+import { Menu, X, ChevronLeft, Home, User, LogOut } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { useAuth } from "@/contexts/AuthContext"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 
 interface HeaderProps {
   activeLink?: "Explore" | "Categories" | "Teach" | "About Us" | "None"
@@ -15,6 +17,7 @@ export function Header({ activeLink = "None" }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const location = useLocation()
   const isHomePage = location.pathname === "/"
+  const { user, profile, signOut } = useAuth()
 
   const getLinkClasses = (linkName: HeaderProps["activeLink"]) => {
     return cn(
@@ -23,6 +26,10 @@ export function Header({ activeLink = "None" }: HeaderProps) {
         ? "text-primary"
         : "text-foreground/80 hover:text-foreground"
     )
+  }
+
+  const handleSignOut = async () => {
+    await signOut()
   }
 
   return (
@@ -59,18 +66,60 @@ export function Header({ activeLink = "None" }: HeaderProps) {
 
         <div className="flex items-center gap-4">
           <ThemeToggle />
-          <Link
-            to="/login"
-            className="hidden md:block text-sm font-medium text-foreground/80 hover:text-foreground transition-colors"
-          >
-            Log in
-          </Link>
-          <Button
-            asChild
-            className="rounded-full bg-gradient-to-r from-rose-500 to-orange-500 hover:from-rose-600 hover:to-orange-600"
-          >
-            <Link to="/signup">Get Started</Link>
-          </Button>
+          
+          {user ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                  <div className="h-8 w-8 rounded-full bg-gradient-to-br from-rose-500 to-orange-500 flex items-center justify-center">
+                    <span className="text-white text-sm font-medium">
+                      {profile?.full_name?.charAt(0) || user.email?.charAt(0) || 'U'}
+                    </span>
+                  </div>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56" align="end" forceMount>
+                <div className="flex flex-col space-y-1 p-2">
+                  <p className="text-sm font-medium leading-none">{profile?.full_name || 'User'}</p>
+                  <p className="text-xs leading-none text-muted-foreground">{user.email}</p>
+                </div>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link to="/dashboard" className="cursor-pointer">
+                    <User className="mr-2 h-4 w-4" />
+                    Dashboard
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/dashboard/my-courses" className="cursor-pointer">
+                    <User className="mr-2 h-4 w-4" />
+                    My Courses
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer">
+                  <LogOut className="mr-2 h-4 w-4" />
+                  Sign out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <>
+              <Link
+                to="/login"
+                className="hidden md:block text-sm font-medium text-foreground/80 hover:text-foreground transition-colors"
+              >
+                Log in
+              </Link>
+              <Button
+                asChild
+                className="rounded-full bg-gradient-to-r from-rose-500 to-orange-500 hover:from-rose-600 hover:to-orange-600"
+              >
+                <Link to="/signup">Get Started</Link>
+              </Button>
+            </>
+          )}
+          
           <Button
             variant="ghost"
             size="icon"
@@ -124,13 +173,15 @@ export function Header({ activeLink = "None" }: HeaderProps) {
             >
               About Us
             </Link>
-            <Link
-              to="/login"
-              className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Log in
-            </Link>
+            {!user && (
+              <Link
+                to="/login"
+                className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Log in
+              </Link>
+            )}
           </nav>
         </div>
       )}
