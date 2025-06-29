@@ -17,6 +17,70 @@ const iconMap = {
   PenTool,
 }
 
+// Placeholder categories data that matches your database schema
+const PLACEHOLDER_CATEGORIES = [
+  {
+    id: "cat-1",
+    name: "Development",
+    slug: "development",
+    description: "Web, mobile, and software development courses for all skill levels",
+    icon: "Code",
+    color: "from-sky-400 to-blue-600",
+    created_at: new Date().toISOString(),
+    course_count: 425
+  },
+  {
+    id: "cat-2",
+    name: "Design",
+    slug: "design",
+    description: "Graphic design, UI/UX, and creative courses to build your skills",
+    icon: "Palette",
+    color: "from-purple-400 to-indigo-600",
+    created_at: new Date().toISOString(),
+    course_count: 310
+  },
+  {
+    id: "cat-3",
+    name: "Marketing",
+    slug: "marketing",
+    description: "Digital marketing strategies to grow your business and audience",
+    icon: "Megaphone",
+    color: "from-amber-400 to-orange-600",
+    created_at: new Date().toISOString(),
+    course_count: 285
+  },
+  {
+    id: "cat-4",
+    name: "Data Science",
+    slug: "data-science",
+    description: "Learn to analyze data and build machine learning models",
+    icon: "LineChart",
+    color: "from-emerald-400 to-teal-600",
+    created_at: new Date().toISOString(),
+    course_count: 195
+  },
+  {
+    id: "cat-5",
+    name: "Business",
+    slug: "business",
+    description: "Entrepreneurship, management, and business strategy courses",
+    icon: "Lightbulb",
+    color: "from-red-400 to-rose-600",
+    created_at: new Date().toISOString(),
+    course_count: 350
+  },
+  {
+    id: "cat-6",
+    name: "Illustration",
+    slug: "illustration",
+    description: "Digital art, drawing, and creative illustration techniques",
+    icon: "PenTool",
+    color: "from-fuchsia-400 to-pink-600",
+    created_at: new Date().toISOString(),
+    course_count: 220
+  }
+]
+
 export default function CategoriesPage() {
   const [allCategories, setAllCategories] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
@@ -28,11 +92,23 @@ export default function CategoriesPage() {
   const loadCategories = async () => {
     try {
       const { data, error } = await categories.getCategories()
-      if (data && !error) {
-        setAllCategories(data)
+      if (data && data.length > 0) {
+        // Add course counts and ensure proper structure
+        const categoriesWithCounts = data.map(category => ({
+          ...category,
+          course_count: Math.floor(Math.random() * 400) + 100, // Random count for demo
+          icon: category.icon || 'Code' // Default icon if not set
+        }))
+        setAllCategories(categoriesWithCounts)
+      } else {
+        // Fallback to placeholder data
+        console.log('Using placeholder categories data')
+        setAllCategories(PLACEHOLDER_CATEGORIES)
       }
     } catch (error) {
-      console.error('Error loading categories:', error)
+      console.error('Error loading categories, using placeholder:', error)
+      // Fallback to placeholder data on error
+      setAllCategories(PLACEHOLDER_CATEGORIES)
     } finally {
       setLoading(false)
     }
@@ -43,7 +119,10 @@ export default function CategoriesPage() {
       <div className="min-h-screen bg-background text-foreground">
         <Header activeLink="Categories" />
         <div className="container py-8">
-          <div className="text-center">Loading categories...</div>
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-rose-500 mx-auto mb-4"></div>
+            <p>Loading categories...</p>
+          </div>
         </div>
       </div>
     )
@@ -98,7 +177,7 @@ export default function CategoriesPage() {
                       </p>
 
                       <div className="text-sm font-medium text-muted-foreground mb-4">
-                        150+ courses available
+                        {category.course_count}+ courses available
                       </div>
 
                       <Button 
@@ -131,31 +210,63 @@ export default function CategoriesPage() {
                 description: "Master both frontend and backend development",
                 courses: "12 courses",
                 duration: "6 months",
-                level: "Beginner to Advanced"
+                level: "Beginner to Advanced",
+                category: "Development"
               },
               {
                 title: "Data Science & Analytics",
                 description: "Learn to analyze data and build ML models",
                 courses: "8 courses", 
                 duration: "4 months",
-                level: "Intermediate"
+                level: "Intermediate",
+                category: "Data Science"
               },
               {
                 title: "Digital Marketing Mastery",
                 description: "Complete guide to modern marketing strategies",
                 courses: "10 courses",
                 duration: "3 months", 
-                level: "Beginner"
+                level: "Beginner",
+                category: "Marketing"
+              },
+              {
+                title: "UI/UX Design Professional",
+                description: "From wireframes to prototypes and user testing",
+                courses: "9 courses",
+                duration: "5 months",
+                level: "Beginner to Advanced",
+                category: "Design"
+              },
+              {
+                title: "Business Leadership",
+                description: "Develop leadership and management skills",
+                courses: "7 courses",
+                duration: "3 months",
+                level: "Intermediate",
+                category: "Business"
+              },
+              {
+                title: "Digital Art & Illustration",
+                description: "Master digital drawing and illustration techniques",
+                courses: "6 courses",
+                duration: "4 months",
+                level: "Beginner",
+                category: "Illustration"
               }
             ].map((path, index) => (
               <Card key={index} className="bg-background">
                 <CardContent className="p-6">
+                  <div className="mb-3">
+                    <span className="text-xs font-medium text-rose-600 bg-rose-100 dark:bg-rose-900/20 px-2 py-1 rounded-full">
+                      {path.category}
+                    </span>
+                  </div>
                   <h3 className="font-bold text-lg mb-2">{path.title}</h3>
                   <p className="text-muted-foreground text-sm mb-4">{path.description}</p>
                   <div className="space-y-1 text-xs text-muted-foreground mb-4">
-                    <div>{path.courses}</div>
-                    <div>{path.duration}</div>
-                    <div>{path.level}</div>
+                    <div>📚 {path.courses}</div>
+                    <div>⏱️ {path.duration}</div>
+                    <div>📊 {path.level}</div>
                   </div>
                   <Button size="sm" variant="outline" className="w-full">
                     Start Learning Path
