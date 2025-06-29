@@ -21,6 +21,7 @@ import NotFoundPage from './pages/NotFoundPage'
 import PrivacyPage from './pages/PrivacyPage'
 import TermsPage from './pages/TermsPage'
 import CookiesPage from './pages/CookiesPage'
+import TroubleshootingPage from './pages/TroubleshootingPage'
 
 // Dashboard Pages
 import DashboardPage from './pages/dashboard/DashboardPage'
@@ -53,6 +54,7 @@ function App() {
             <Route path="/privacy" element={<PrivacyPage />} />
             <Route path="/terms" element={<TermsPage />} />
             <Route path="/cookies" element={<CookiesPage />} />
+            <Route path="/troubleshooting" element={<TroubleshootingPage />} />
 
             {/* Auth Routes (redirect if already logged in) */}
             <Route 
