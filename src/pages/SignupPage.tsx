@@ -6,8 +6,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { useAuth } from "@/contexts/AuthContext"
-import { useToast } from "@/hooks/use-toast"
-import { Eye, EyeOff, Loader2 } from "lucide-react"
+import { Eye, EyeOff, Loader2, AlertCircle, CheckCircle } from "lucide-react"
 
 export default function SignupPage() {
   const [fullName, setFullName] = useState("")
@@ -17,28 +16,21 @@ export default function SignupPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null)
   const { signUp } = useAuth()
-  const { toast } = useToast()
   const navigate = useNavigate()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setMessage(null)
     
     if (password !== confirmPassword) {
-      toast({
-        title: "Error",
-        description: "Passwords do not match",
-        variant: "destructive",
-      })
+      setMessage({ type: 'error', text: 'Passwords do not match' })
       return
     }
 
     if (password.length < 6) {
-      toast({
-        title: "Error",
-        description: "Password must be at least 6 characters long",
-        variant: "destructive",
-      })
+      setMessage({ type: 'error', text: 'Password must be at least 6 characters long' })
       return
     }
 
@@ -48,24 +40,16 @@ export default function SignupPage() {
       const { error } = await signUp(email, password, fullName)
       
       if (error) {
-        toast({
-          title: "Error",
-          description: error.message,
-          variant: "destructive",
-        })
+        setMessage({ type: 'error', text: error.message })
       } else {
-        toast({
-          title: "Success",
-          description: "Account created successfully! Please check your email to verify your account.",
+        setMessage({ 
+          type: 'success', 
+          text: 'Account created successfully! Please check your email to verify your account.' 
         })
-        navigate("/login")
+        setTimeout(() => navigate("/login"), 2000)
       }
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "An unexpected error occurred",
-        variant: "destructive",
-      })
+      setMessage({ type: 'error', text: 'An unexpected error occurred' })
     } finally {
       setLoading(false)
     }
@@ -87,6 +71,21 @@ export default function SignupPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
+            {message && (
+              <div className={`mb-4 p-3 rounded-md flex items-center gap-2 ${
+                message.type === 'error' 
+                  ? 'bg-red-50 text-red-700 border border-red-200' 
+                  : 'bg-green-50 text-green-700 border border-green-200'
+              }`}>
+                {message.type === 'error' ? (
+                  <AlertCircle className="h-4 w-4" />
+                ) : (
+                  <CheckCircle className="h-4 w-4" />
+                )}
+                <span className="text-sm">{message.text}</span>
+              </div>
+            )}
+            
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="fullName">Full Name</Label>

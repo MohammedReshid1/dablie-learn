@@ -6,44 +6,33 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { useAuth } from "@/contexts/AuthContext"
-import { useToast } from "@/hooks/use-toast"
-import { Eye, EyeOff, Loader2 } from "lucide-react"
+import { Eye, EyeOff, Loader2, AlertCircle, CheckCircle } from "lucide-react"
 
 export default function LoginPage() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null)
   const { signIn } = useAuth()
-  const { toast } = useToast()
   const navigate = useNavigate()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
+    setMessage(null)
 
     try {
       const { error } = await signIn(email, password)
       
       if (error) {
-        toast({
-          title: "Error",
-          description: error.message,
-          variant: "destructive",
-        })
+        setMessage({ type: 'error', text: error.message })
       } else {
-        toast({
-          title: "Success",
-          description: "Welcome back to DablieLearn!",
-        })
-        navigate("/dashboard")
+        setMessage({ type: 'success', text: 'Welcome back to DablieLearn!' })
+        setTimeout(() => navigate("/dashboard"), 1000)
       }
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "An unexpected error occurred",
-        variant: "destructive",
-      })
+      setMessage({ type: 'error', text: 'An unexpected error occurred' })
     } finally {
       setLoading(false)
     }
@@ -65,6 +54,21 @@ export default function LoginPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
+            {message && (
+              <div className={`mb-4 p-3 rounded-md flex items-center gap-2 ${
+                message.type === 'error' 
+                  ? 'bg-red-50 text-red-700 border border-red-200' 
+                  : 'bg-green-50 text-green-700 border border-green-200'
+              }`}>
+                {message.type === 'error' ? (
+                  <AlertCircle className="h-4 w-4" />
+                ) : (
+                  <CheckCircle className="h-4 w-4" />
+                )}
+                <span className="text-sm">{message.text}</span>
+              </div>
+            )}
+            
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>

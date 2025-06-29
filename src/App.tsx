@@ -1,7 +1,6 @@
 import { Routes, Route } from 'react-router-dom'
 import { ThemeProvider } from './components/theme-provider'
 import { AuthProvider } from './contexts/AuthContext'
-import { Toaster } from './components/ui/toaster'
 import { ProtectedRoute } from './components/ProtectedRoute'
 
 // Pages
@@ -153,7 +152,6 @@ function App() {
             {/* 404 Route */}
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
-          <Toaster />
         </div>
       </AuthProvider>
     </ThemeProvider>
